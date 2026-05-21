@@ -489,6 +489,13 @@
       .sig-label { gap: 8px; }
       .sig-label span { font-size: .48rem; letter-spacing: .03em; }
     }
+    /* ── 3D SHAPES STRIP (Three.js, Bruno-Simon-style) ── */
+    /* Full-viewport overlay where the drone flies and the robot walks */
+    #shapesCvs {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 5; opacity: .72;
+    }
+
     @media (max-width: 480px) {
       .sig-device { flex: 0 0 44px; }
       .sig-device svg { width: 26px; height: 26px; }
@@ -967,6 +974,9 @@
 
 <!-- Cursor glow -->
 <div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Page-wide WebGL overlay: drone flies, robot walks -->
+<canvas id="shapesCvs" aria-hidden="true"></canvas>
 
 <!-- Terminal -->
 <div class="term-overlay" id="termOverlay">
@@ -1763,6 +1773,167 @@
       } finally {
         btn.disabled = false;
       }
+    });
+  })();
+
+  /* ── PAGE-WIDE WEBGL OVERLAY ── lazy-loaded drone + walking robot */
+  (function () {
+    const cvs = document.getElementById('shapesCvs');
+    if (!cvs) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const FRUSTUM_H = 12;  // visible vertical world units (orthographic) — tune for size
+
+    let initialized = false, rafId = null;
+    let scene, camera, renderer, drone, robot;
+    let t = 0;
+    const walk = { x: 0, dir: 1, speed: 0.025 };
+
+    function resize() {
+      if (!camera || !renderer) return;
+      const w = window.innerWidth, h = window.innerHeight;
+      const aspect = w / h;
+      camera.left = -FRUSTUM_H * aspect / 2;
+      camera.right = FRUSTUM_H * aspect / 2;
+      camera.top = FRUSTUM_H / 2;
+      camera.bottom = -FRUSTUM_H / 2;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+
+    function animate() {
+      t += 0.012;
+      const aspect = camera.right * 2 / FRUSTUM_H;
+
+      // DRONE — Lissajous flight in upper viewport with banking + spinning rotors
+      const rx = FRUSTUM_H * aspect / 2 * 0.78;
+      const ry = FRUSTUM_H * 0.22;
+      const newX = Math.sin(t * 0.35) * rx;
+      const newY = Math.sin(t * 0.6)  * ry + FRUSTUM_H * 0.18;
+      const vx = newX - drone.position.x;
+      const vy = newY - drone.position.y;
+      drone.position.set(newX, newY, 0);
+      drone.rotation.z = -vx * 1.2;  // bank into lateral motion
+      drone.rotation.x =  vy * 0.8;  // pitch with vertical motion
+      drone.userData.rotors.forEach(r => r.rotation.y += 0.6);
+
+      // ROBOT — walks along the floor, swings arms/legs, turns at viewport edges
+      const stepT = t * 5;
+      const halfWidth = FRUSTUM_H * aspect / 2 * 0.88;
+      walk.x += walk.dir * walk.speed;
+      if (walk.x >  halfWidth) { walk.dir = -1; walk.x =  halfWidth; }
+      if (walk.x < -halfWidth) { walk.dir =  1; walk.x = -halfWidth; }
+      robot.position.x = walk.x;
+      // Body bob — feet pin to floor, head bounces slightly
+      const floorY = -FRUSTUM_H * 0.40;
+      robot.position.y = floorY + 0.05 * robot.scale.y + Math.abs(Math.sin(stepT)) * 0.04;
+      // Face direction of travel (robot built facing +Z, so turn -90° to face +X, +90° for -X)
+      robot.rotation.y = walk.dir === 1 ? -Math.PI / 2 : Math.PI / 2;
+      // Limb swing — opposing legs, arms in opposite phase to legs (natural gait)
+      const swing = Math.sin(stepT) * 0.55;
+      robot.userData.legPivots[0].rotation.x =  swing;
+      robot.userData.legPivots[1].rotation.x = -swing;
+      robot.userData.armPivots[0].rotation.x = -swing * 0.7;
+      robot.userData.armPivots[1].rotation.x =  swing * 0.7;
+
+      renderer.render(scene, camera);
+      rafId = requestAnimationFrame(animate);
+    }
+
+    async function init() {
+      if (initialized) return; initialized = true;
+      let THREE;
+      try {
+        THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/+esm');
+      } catch (err) {
+        console.warn('Three.js failed to load; page overlay skipped.', err);
+        return;
+      }
+
+      scene = new THREE.Scene();
+      const aspect = window.innerWidth / window.innerHeight;
+      camera = new THREE.OrthographicCamera(
+        -FRUSTUM_H * aspect / 2, FRUSTUM_H * aspect / 2,
+        FRUSTUM_H / 2, -FRUSTUM_H / 2,
+        0.1, 100
+      );
+      camera.position.z = 5;
+
+      renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const mat = new THREE.MeshNormalMaterial({ flatShading: true });
+
+      // ── DRONE ── body + crossed arms + 4 spinning rotors
+      drone = new THREE.Group();
+      drone.add(new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.14, 0.4), mat));
+      drone.add(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.05, 0.08), mat));
+      drone.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 1.1), mat));
+      const rotors = [];
+      [[0.5, 0.07, 0], [-0.5, 0.07, 0], [0, 0.07, 0.5], [0, 0.07, -0.5]].forEach(([x, y, z]) => {
+        const r = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.025, 16), mat);
+        r.position.set(x, y, z);
+        drone.add(r);
+        rotors.push(r);
+      });
+      drone.userData.rotors = rotors;
+      drone.scale.setScalar(0.85);
+      scene.add(drone);
+
+      // ── ROBOT ── humanoid with pivot-jointed limbs so they can swing
+      robot = new THREE.Group();
+      // Head + eyes + antenna
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), mat); head.position.y = 1.5;
+      const eyeGeo = new THREE.SphereGeometry(0.06, 8, 6);
+      const eyeL = new THREE.Mesh(eyeGeo, mat); eyeL.position.set(-0.13, 1.55, 0.26);
+      const eyeR = new THREE.Mesh(eyeGeo, mat); eyeR.position.set( 0.13, 1.55, 0.26);
+      const ant  = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.3, 8), mat); ant.position.y = 1.9;
+      const tip  = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 8), mat); tip.position.y = 2.1;
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.8, 0.4), mat); body.position.y = 0.85;
+      robot.add(head, eyeL, eyeR, ant, tip, body);
+      // Arm pivots at shoulders — arm hangs below pivot so rotation.x swings it forward/back
+      const armPivots = [];
+      [-0.52, 0.52].forEach(x => {
+        const p = new THREE.Group();
+        p.position.set(x, 1.2, 0);
+        const a = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.65, 0.16), mat);
+        a.position.y = -0.325;
+        p.add(a);
+        robot.add(p);
+        armPivots.push(p);
+      });
+      // Leg pivots at hips — same pattern
+      const legPivots = [];
+      [-0.18, 0.18].forEach(x => {
+        const p = new THREE.Group();
+        p.position.set(x, 0.45, 0);
+        const l = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.5, 0.2), mat);
+        l.position.y = -0.25;
+        p.add(l);
+        robot.add(p);
+        legPivots.push(p);
+      });
+      robot.userData.armPivots = armPivots;
+      robot.userData.legPivots = legPivots;
+      robot.scale.setScalar(0.7);
+      // Start walking from the left edge
+      walk.x = -FRUSTUM_H * aspect / 2 * 0.88;
+      scene.add(robot);
+
+      window.addEventListener('resize', resize);
+      resize();
+      rafId = requestAnimationFrame(animate);
+    }
+
+    // Defer load until the page has settled — don't compete with hero LCP
+    const kick = () => init();
+    if ('requestIdleCallback' in window) requestIdleCallback(kick, { timeout: 2500 });
+    else setTimeout(kick, 1500);
+
+    // Pause when tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      else if (!document.hidden && initialized && !rafId && scene) rafId = requestAnimationFrame(animate);
     });
   })();
 </script>
