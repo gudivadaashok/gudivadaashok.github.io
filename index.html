@@ -495,6 +495,8 @@
       position: fixed; inset: 0; width: 100vw; height: 100vh;
       pointer-events: none; z-index: 5; opacity: .72;
     }
+    /* Light mode uses solid Lambert materials — bump opacity so they read confidently on cream bg */
+    [data-theme="light"] #shapesCvs { opacity: .95; }
 
     @media (max-width: 480px) {
       .sig-device { flex: 0 0 44px; }
@@ -1862,7 +1864,20 @@
       renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      const mat = new THREE.MeshNormalMaterial({ flatShading: true });
+      // Dark mode: rainbow MeshNormalMaterial (current Bruno look).
+      // Light mode: solid Lambert with lights — needed because the rainbow normal-mapping
+      // washes out against the cream background and the drone/robot become invisible.
+      const matRainbow    = new THREE.MeshNormalMaterial({ flatShading: true });
+      const matRobotLight = new THREE.MeshLambertMaterial({ color: 0xB8521E, flatShading: true }); // rust
+      const matDroneLight = new THREE.MeshLambertMaterial({ color: 0x2C2820, flatShading: true }); // near-black
+      const mat = matRainbow; // used during build; swapped per-mesh by syncTheme()
+
+      // Lights only affect Lambert; MeshNormalMaterial ignores them, so keeping these
+      // in the scene for both themes costs nothing visually in dark mode.
+      const dir = new THREE.DirectionalLight(0xffffff, 0.95);
+      dir.position.set(3, 5, 4);
+      scene.add(dir);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.45));
 
       // ── DRONE ── body + crossed arms + 4 spinning rotors
       drone = new THREE.Group();
@@ -1919,6 +1934,21 @@
       // Start walking from the left edge
       walk.x = -FRUSTUM_H * aspect / 2 * 0.88;
       scene.add(robot);
+
+      // Theme-aware retinting — keeps drone + robot visible against light bg
+      drone.userData.lightMat = matDroneLight;
+      robot.userData.lightMat = matRobotLight;
+      function syncTheme() {
+        const isLight = document.documentElement.dataset.theme === 'light';
+        [drone, robot].forEach(root => {
+          const m = isLight ? root.userData.lightMat : matRainbow;
+          root.traverse(o => { if (o.isMesh) o.material = m; });
+        });
+      }
+      syncTheme();
+      new MutationObserver(syncTheme).observe(document.documentElement, {
+        attributes: true, attributeFilter: ['data-theme']
+      });
 
       window.addEventListener('resize', resize);
       resize();
