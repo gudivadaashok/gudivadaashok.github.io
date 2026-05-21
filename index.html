@@ -147,8 +147,17 @@
     /* ══ HERO ══ */
     #hero { padding-top: 176px; padding-bottom: 80px; border-bottom: 1px solid var(--rule); }
     .hero-status { display: inline-flex; align-items: center; gap: 9px; font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--low); margin-bottom: 28px; }
-    .hero-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rust); animation: blink 2.5s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    /* Hero status: tiny clickable procedural planet with atmosphere halo */
+    .planet-btn {
+      width: 32px; height: 32px; padding: 0; flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%; transition: transform .15s;
+    }
+    .planet-btn:hover { transform: scale(1.10); }
+    .planet-btn:focus-visible { outline: 1px solid var(--rust); outline-offset: 2px; }
+    /* No border-radius on the canvas itself — the halo would get clipped. */
+    .planet-btn canvas { display: block; width: 32px; height: 32px; }
     .hero-name { font-size: clamp(3rem, 6vw, 5.2rem); font-weight: 800; line-height: 1.03; letter-spacing: -.03em; margin-bottom: 16px; }
     .hero-name .accent { color: var(--rust); }
     .hero-title { font-family: 'JetBrains Mono', monospace; font-size: .90rem; color: var(--mid); margin-bottom: 24px; letter-spacing: .02em; }
@@ -671,7 +680,7 @@
     <span class="code-float" style="right:1%;top:78%;--d:6s;--dur:9s">kubectl get pods -n prod</span>
 
     <div class="hero-inner">
-      <div class="hero-status h-anim" style="--d:.05s"><span class="dot"></span>Open to work · Reston, VA</div>
+      <div class="hero-status h-anim" style="--d:.05s"><button type="button" class="planet-btn" id="heroPlanetBtn" title="click to regenerate" aria-label="Regenerate planet"><canvas id="heroPlanet" width="64" height="64"></canvas></button>Open to work · Reston, VA</div>
       <h1 class="hero-name h-anim" style="--d:.18s">Ashok<br><span class="accent">Gudivada.</span></h1>
 
       <!-- Typewriter title -->
@@ -1533,6 +1542,147 @@
     }, { threshold: 0.1 });
     stripObs.observe(cvs.closest('.sig-strip') || cvs);
     window.addEventListener('resize', resize);
+  })();
+
+  /* ── HERO STATUS PLANET ── procedural sphere + atmosphere halo, seed persisted */
+  (function () {
+    const cvs = document.getElementById('heroPlanet');
+    const btn = document.getElementById('heroPlanetBtn');
+    if (!cvs || !btn) return;
+    const ctx = cvs.getContext('2d');
+    const SIZE = 64, R = SIZE / 2;   // canvas = 64×64 internal, displayed at 32×32
+    const R_DISC = 20;               // planet disc radius (the halo fills R_DISC → R)
+    const STORE_KEY = 'heroPlanetV2';
+
+    // Palettes stored as RGB arrays so we can compose rgba() halo gradients
+    const PALETTES = [
+      { base: [212,105, 42], land: [122, 50, 16], lit: [242,163,108] }, // rust
+      { base: [168,134, 74], land: [ 90, 66, 32], lit: [212,179,116] }, // gold
+      { base: [ 58,126,106], land: [ 27, 61, 50], lit: [122,194,168] }, // teal
+      { base: [106, 90,160], land: [ 47, 40, 88], lit: [168,154,216] }, // violet
+      { base: [184, 82, 64], land: [ 90, 31, 24], lit: [230,138,120] }, // coral
+    ];
+    const rgb = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+    let palette = PALETTES[0];
+    let continents = [];
+    let theta = 0;
+    let warp = 0;          // click-burst spin, decays each frame
+    let rafId = null;
+
+    function saveSeed() {
+      try {
+        localStorage.setItem(STORE_KEY, JSON.stringify({
+          p: PALETTES.indexOf(palette),
+          c: continents.map(c => [+c.theta.toFixed(3), +c.phi.toFixed(3), +c.size.toFixed(3)]),
+        }));
+      } catch {}
+    }
+
+    function loadSeed() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return false;
+        const d = JSON.parse(raw);
+        if (typeof d.p !== 'number' || !Array.isArray(d.c) || d.c.length === 0) return false;
+        palette = PALETTES[d.p] || PALETTES[0];
+        continents = d.c.map(([t, p, s]) => ({ theta: t, phi: p, size: s }));
+        return true;
+      } catch { return false; }
+    }
+
+    function seed() {
+      palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+      const n = 2 + Math.floor(Math.random() * 3);
+      continents = [];
+      for (let i = 0; i < n; i++) {
+        continents.push({
+          theta: Math.random() * Math.PI * 2,
+          phi:   (Math.random() - 0.5) * 1.3,
+          size:  0.28 + Math.random() * 0.32,
+        });
+      }
+      warp = 1;
+      saveSeed();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      // 1. ATMOSPHERE HALO — drawn first, disc covers any inner bleed
+      // Off-center toward the lit upper-left to mimic atmospheric scattering
+      const haloA = 0.42 + warp * 0.25;
+      const halo = ctx.createRadialGradient(R * 0.78, R * 0.78, R_DISC * 0.85, R, R, R);
+      halo.addColorStop(0,   rgb(palette.lit, haloA));
+      halo.addColorStop(0.55, rgb(palette.base, 0.18));
+      halo.addColorStop(1,   rgb(palette.base, 0));
+      ctx.fillStyle = halo;
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      // 2. Planet body — lit upper-left, shadow lower-right
+      const body = ctx.createRadialGradient(R * 0.72, R * 0.72, 1, R, R, R_DISC);
+      body.addColorStop(0,   rgb(palette.lit));
+      body.addColorStop(0.5, rgb(palette.base));
+      body.addColorStop(1,   rgb(palette.land));
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.arc(R, R, R_DISC, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 3. Continents — clipped to disc, only the visible hemisphere
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(R, R, R_DISC, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.fillStyle = rgb(palette.land);
+      continents.forEach(c => {
+        const t = c.theta + theta;
+        const z = Math.cos(t);
+        if (z <= 0.05) return;
+        const x = R + R_DISC * 0.82 * Math.sin(t);
+        const y = R + R_DISC * 0.82 * c.phi;
+        const rad = c.size * R_DISC * z;
+        ctx.globalAlpha = z * 0.85;
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // 4. Terminator shadow on the right
+      const shade = ctx.createRadialGradient(R * 0.72, R * 0.72, R_DISC * 0.35, R, R, R_DISC);
+      shade.addColorStop(0, 'rgba(0,0,0,0)');
+      shade.addColorStop(1, 'rgba(0,0,0,0.50)');
+      ctx.fillStyle = shade;
+      ctx.beginPath();
+      ctx.arc(R, R, R_DISC, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function tick() {
+      theta += 0.006 + warp * 0.08;
+      warp *= 0.92;
+      draw();
+      rafId = requestAnimationFrame(tick);
+    }
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Restore the visitor's planet, or generate (and persist) a fresh one
+    if (!loadSeed()) seed();
+    draw();
+    if (!reduce) rafId = requestAnimationFrame(tick);
+
+    btn.addEventListener('click', e => { e.preventDefault(); seed(); if (reduce) draw(); });
+
+    // Pause when hero scrolls offscreen
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !reduce && !rafId) rafId = requestAnimationFrame(tick);
+        else if (!e.isIntersecting && rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      });
+    }, { threshold: 0 });
+    io.observe(cvs);
   })();
 
   termInput.addEventListener('keydown', e => {
