@@ -492,7 +492,9 @@
     /* ── 3D SHAPES STRIP (Three.js, Bruno-Simon-style) ── */
     /* Full-viewport overlay where the drone flies and the robot walks */
     #shapesCvs {
-      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      position: fixed; inset: 0; width: 100vw;
+      height: 100vh;          /* fallback for browsers without dvh */
+      height: 100dvh;         /* iOS Safari: matches visible viewport so floor lines up with the footer */
       pointer-events: none; z-index: 5; opacity: .72;
     }
     /* Light mode uses solid Lambert materials — bump opacity so they read confidently on cream bg */
@@ -726,7 +728,7 @@
       <div class="about-copy reveal" style="--d:.14s">
         <p>I'm a full-stack engineer with a focus on <strong>AI/ML and geospatial systems</strong>. At Verizon I own 40+ Java/Spring Boot microservices and 7+ Angular/React dashboards powering the US 5G network.</p>
         <p>On the ML side I've shipped LLM PoCs, production anomaly-detection agents, a CLIP-based drone vision system, and Prophet/LSTM capacity-planning models — all deployed and used by real teams.</p>
-        <p>In my spare time I work on electronics and robotics projects. Right now that's a 5-node <strong>Kubernetes home lab</strong> on Proxmox with a Raspberry Pi backbone — partly for ML experiments, partly because I enjoy building hardware.</p>
+        <p>In my spare time I work on electronics and robotics projects. The 5-node <strong>Kubernetes home lab</strong> on Proxmox started as ML infra and a Raspberry Pi backbone — these days it's mostly drone perception, ROS pipelines, and hardware-in-the-loop experiments.</p>
 
         <!-- Certification badges -->
         <div class="certs">
@@ -1813,12 +1815,16 @@
     function animate() {
       t += 0.012;
       const aspect = camera.right * 2 / FRUSTUM_H;
+      const isNarrow = aspect < 0.75;   // portrait phone
 
       // DRONE — Lissajous flight in upper viewport with banking + spinning rotors
-      const rx = FRUSTUM_H * aspect / 2 * 0.78;
-      const ry = FRUSTUM_H * 0.22;
-      const newX = Math.sin(t * 0.35) * rx;
-      const newY = Math.sin(t * 0.6)  * ry + FRUSTUM_H * 0.18;
+      // On narrow viewports hug the upper-right corner to avoid crossing bio text
+      const rx = FRUSTUM_H * aspect / 2 * (isNarrow ? 0.45 : 0.78);
+      const ry = FRUSTUM_H * (isNarrow ? 0.12 : 0.22);
+      const cx = isNarrow ? FRUSTUM_H * aspect / 2 * 0.50 : 0;
+      const cy = FRUSTUM_H * (isNarrow ? 0.30 : 0.18);
+      const newX = Math.sin(t * 0.35) * rx + cx;
+      const newY = Math.sin(t * 0.6)  * ry + cy;
       const vx = newX - drone.position.x;
       const vy = newY - drone.position.y;
       drone.position.set(newX, newY, 0);
@@ -1937,7 +1943,8 @@
       });
       robot.userData.armPivots = armPivots;
       robot.userData.legPivots = legPivots;
-      robot.scale.setScalar(0.7);
+      // Smaller on portrait phones so the robot doesn't dominate the screen
+      robot.scale.setScalar(aspect < 0.75 ? 0.5 : 0.7);
       // Start walking from the left edge
       walk.x = -FRUSTUM_H * aspect / 2 * 0.88;
       scene.add(robot);
