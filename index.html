@@ -229,7 +229,12 @@
     .c-links li a:hover .arr { color: var(--rust); }
     .cl-n { font-weight: 500; color: var(--text); }
     .cl-h { font-family: 'JetBrains Mono', monospace; font-size: .72rem; }
-    .arr { font-size: .68rem; color: var(--low); transition: color .15s; text-align: right; }
+    .arr {
+      font-size: .68rem; color: var(--low); transition: color .15s; text-align: right;
+      /* Force text-style glyph — keeps iOS/Android from rendering ↗ as a color emoji */
+      font-variant-emoji: text;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
     .ff { border-top: 1px solid var(--rule); }
     .ff label { display: block; font-family: 'JetBrains Mono', monospace; font-size: .64rem; color: var(--low); letter-spacing: .10em; text-transform: uppercase; padding-top: 12px; padding-bottom: 4px; }
     .ff input, .ff textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--rule); color: var(--text); font-family: 'Inter', sans-serif; font-size: .86rem; font-weight: 300; padding-bottom: 10px; outline: none; transition: border-color .2s; }
@@ -893,12 +898,12 @@
     </div>
     <div class="contact-grid">
       <ul class="c-links reveal" style="--d:.14s">
-        <li><a href="mailto:hello@ashokg.dev"><span class="cl-n">Email</span><span class="cl-h">hello@ashokg.dev</span><span class="arr">↗</span></a></li>
-        <li><a href="https://www.linkedin.com/in/ashok-gudivada/" target="_blank"><span class="cl-n">LinkedIn</span><span class="cl-h">ashok-gudivada</span><span class="arr">↗</span></a></li>
-        <li><a href="https://github.com/gudivadaashok" target="_blank"><span class="cl-n">GitHub</span><span class="cl-h">gudivadaashok</span><span class="arr">↗</span></a></li>
-        <li><a href="https://stackoverflow.com/users/12442128/ashok-gudivada" target="_blank"><span class="cl-n">Stack Overflow</span><span class="cl-h">ashok-gudivada</span><span class="arr">↗</span></a></li>
-        <li><a href="https://medium.com/@ashokgudivada" target="_blank"><span class="cl-n">Medium</span><span class="cl-h">@ashokgudivada</span><span class="arr">↗</span></a></li>
-        <li><a href="https://twitter.com/ashokgudivada" target="_blank"><span class="cl-n">Twitter / X</span><span class="cl-h">@ashokgudivada</span><span class="arr">↗</span></a></li>
+        <li><a href="mailto:hello@ashokg.dev"><span class="cl-n">Email</span><span class="cl-h">hello@ashokg.dev</span><span class="arr">↗&#xFE0E;</span></a></li>
+        <li><a href="https://www.linkedin.com/in/ashok-gudivada/" target="_blank"><span class="cl-n">LinkedIn</span><span class="cl-h">ashok-gudivada</span><span class="arr">↗&#xFE0E;</span></a></li>
+        <li><a href="https://github.com/gudivadaashok" target="_blank"><span class="cl-n">GitHub</span><span class="cl-h">gudivadaashok</span><span class="arr">↗&#xFE0E;</span></a></li>
+        <li><a href="https://stackoverflow.com/users/12442128/ashok-gudivada" target="_blank"><span class="cl-n">Stack Overflow</span><span class="cl-h">ashok-gudivada</span><span class="arr">↗&#xFE0E;</span></a></li>
+        <li><a href="https://medium.com/@ashokgudivada" target="_blank"><span class="cl-n">Medium</span><span class="cl-h">@ashokgudivada</span><span class="arr">↗&#xFE0E;</span></a></li>
+        <li><a href="https://twitter.com/ashokgudivada" target="_blank"><span class="cl-n">Twitter / X</span><span class="cl-h">@ashokgudivada</span><span class="arr">↗&#xFE0E;</span></a></li>
       </ul>
       <form id="contactForm" action="https://formspree.io/f/xlgvbezl" method="POST">
         <!-- honeypot: real users never see this; bots fill it and get silently dropped -->
