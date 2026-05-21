@@ -1785,11 +1785,18 @@
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const FRUSTUM_H = 12;  // visible vertical world units (orthographic) — tune for size
+    const footerEl = document.querySelector('footer');
 
     let initialized = false, rafId = null;
     let scene, camera, renderer, drone, robot;
     let t = 0;
     const walk = { x: 0, dir: 1, speed: 0.025 };
+
+    // Floor lines up with the top edge of the fixed footer
+    function getFloorY() {
+      const footerH = footerEl ? footerEl.offsetHeight : 0;
+      return -FRUSTUM_H / 2 + (footerH / window.innerHeight) * FRUSTUM_H;
+    }
 
     function resize() {
       if (!camera || !renderer) return;
@@ -1826,8 +1833,8 @@
       if (walk.x >  halfWidth) { walk.dir = -1; walk.x =  halfWidth; }
       if (walk.x < -halfWidth) { walk.dir =  1; walk.x = -halfWidth; }
       robot.position.x = walk.x;
-      // Body bob — feet pin to floor, head bounces slightly
-      const floorY = -FRUSTUM_H * 0.40;
+      // Body bob — feet pin to top edge of the footer, head bounces slightly
+      const floorY = getFloorY();
       robot.position.y = floorY + 0.05 * robot.scale.y + Math.abs(Math.sin(stepT)) * 0.04;
       // Face direction of travel (robot built facing +Z, so turn -90° to face +X, +90° for -X)
       robot.rotation.y = walk.dir === 1 ? -Math.PI / 2 : Math.PI / 2;
