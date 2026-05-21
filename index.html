@@ -331,13 +331,6 @@
     }
     @media (max-width: 768px) { .code-float { display: none; } }
 
-    /* ── TYPEWRITER CURSOR ── */
-    .tw-cursor {
-      display: inline-block; width: 2px; height: 1em;
-      background: var(--rust); margin-left: 2px; vertical-align: middle;
-      animation: twBlink .75s step-end infinite;
-    }
-    @keyframes twBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
     /* ── TERMINAL ── */
     .term-overlay {
@@ -651,20 +644,22 @@
 <div class="ticker-wrap" aria-hidden="true">
   <div class="ticker-track">
     <span>Currently building</span><span class="sep">·</span>
-    <span>5-node K3s homelab on Proxmox</span><span class="sep">·</span>
+    <span>Autonomous robotics on a self-hosted K3s cluster</span><span class="sep">·</span>
+    <span>ROS · real-time perception · embedded</span><span class="sep">·</span>
     <span>CLIP drone detection @ 0.733 IoU</span><span class="sep">·</span>
     <span>Self-Healing Network agents in production</span><span class="sep">·</span>
+    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
     <span>Open to Senior / Staff Eng roles</span><span class="sep">·</span>
-    <span>RF heatmap · Kafka · Spark · PostGIS</span><span class="sep">·</span>
     <span>AWS Certified · Azure Certified</span><span class="sep">·</span>
     <span>hello@ashokg.dev</span><span class="sep">·</span>
     <!-- duplicate for seamless loop -->
     <span>Currently building</span><span class="sep">·</span>
-    <span>5-node K3s homelab on Proxmox</span><span class="sep">·</span>
+    <span>Autonomous robotics on a self-hosted K3s cluster</span><span class="sep">·</span>
+    <span>ROS · real-time perception · embedded</span><span class="sep">·</span>
     <span>CLIP drone detection @ 0.733 IoU</span><span class="sep">·</span>
     <span>Self-Healing Network agents in production</span><span class="sep">·</span>
+    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
     <span>Open to Senior / Staff Eng roles</span><span class="sep">·</span>
-    <span>RF heatmap · Kafka · Spark · PostGIS</span><span class="sep">·</span>
     <span>AWS Certified · Azure Certified</span><span class="sep">·</span>
     <span>hello@ashokg.dev</span><span class="sep">·</span>
   </div>
@@ -687,7 +682,7 @@
 
     <!-- Floating code snippets — 3 only, hugging the far-right edge away from text -->
     <span class="code-float" style="right:1%;top:22%;--d:0s;--dur:11s">@RestController</span>
-    <span class="code-float" style="right:1%;top:52%;--d:3s;--dur:10s">model.fit(X_train, y_train)</span>
+    <span class="code-float" style="right:1%;top:52%;--d:3s;--dur:10s">rclpy.spin(perception_node)</span>
     <span class="code-float" style="right:1%;top:78%;--d:6s;--dur:9s">kubectl get pods -n prod</span>
 
     <div class="hero-inner">
@@ -695,13 +690,13 @@
       <h1 class="hero-name h-anim" style="--d:.18s">Ashok<br><span class="accent">Gudivada.</span></h1>
 
       <!-- Typewriter title -->
-      <p class="hero-title h-anim" style="--d:.32s"><span id="tw-text">Full Stack Engineer</span><span class="tw-cursor"></span></p>
+      <p class="hero-title h-anim" style="--d:.32s">Senior Full-Stack Engineer · AI/ML · Geospatial Systems</p>
 
       <p class="hero-bio h-anim" style="--d:.44s">
-        10 years building full-stack systems in production. Currently at Verizon on
-        <strong>5G network tooling</strong> — RF planning dashboards, geospatial
-        pipelines, and <strong>ML-driven automation</strong> used by 500+ engineers.
-        Outside of work: electronics, robotics, and a self-hosted Kubernetes lab.
+        10 years shipping production systems end-to-end. At Verizon, I own the tooling that
+        powers <strong>US 5G network planning</strong> — RF dashboards, geospatial pipelines,
+        and <strong>ML-driven automation</strong> used daily by 500+ engineers.
+        Outside work, I run a self-hosted K3s cluster on Proxmox and build autonomous robotics systems for fun.
       </p>
       <div class="hero-actions h-anim" style="--d:.56s">
         <a href="#contact" class="btn btn-fill">Get in touch →</a>
@@ -726,9 +721,9 @@
     <h2 class="sec-t reveal" style="--d:.08s">Background</h2>
     <div class="about-grid">
       <div class="about-copy reveal" style="--d:.14s">
-        <p>I'm a full-stack engineer with a focus on <strong>AI/ML and geospatial systems</strong>. At Verizon I own 40+ Java/Spring Boot microservices and 7+ Angular/React dashboards powering the US 5G network.</p>
-        <p>On the ML side I've shipped LLM PoCs, production anomaly-detection agents, a CLIP-based drone vision system, and Prophet/LSTM capacity-planning models — all deployed and used by real teams.</p>
-        <p>In my spare time I work on electronics and robotics projects. The 5-node <strong>Kubernetes home lab</strong> on Proxmox started as ML infra and a Raspberry Pi backbone — these days it's mostly drone perception, ROS pipelines, and hardware-in-the-loop experiments.</p>
+        <p>10 years shipping production systems end-to-end. At Verizon, I own 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards that power <strong>RF planning and capacity decisions</strong> across the US 5G network — tools used daily by 500+ engineers.</p>
+        <p>On the ML side, I've taken models from <strong>prototype to production</strong>: anomaly-detection agents, Prophet/LSTM capacity-planning models, and a CLIP-based drone vision system — all running on real infrastructure, used by real teams.</p>
+        <p>Outside work, <strong>I build robots</strong>. ROS pipelines, embedded hardware, real-time perception systems, hardware-in-the-loop testing — all running on a self-hosted 5-node K3s cluster I put together for exactly this kind of tinkering, plus a growing pile of components I'm either fixing or breaking.</p>
 
         <!-- Certification badges -->
         <div class="certs">
@@ -894,12 +889,12 @@
           <div class="exp-role">Senior Software Engineer</div>
           <div class="exp-co">Verizon · Reston, VA</div>
           <ul class="exp-bul">
-            <li>Owns 40+ Java/Spring Boot microservices and 7+ Angular/React dashboards used by 500+ RF engineers for 5G/5G-Advanced network planning, spectrum management, and FCC compliance.</li>
-            <li>Shipped LLM PoCs and ML automation totalling <strong>13,000+ hours of operational ROI per year</strong>, supporting the 5G rollout to 100M+ users.</li>
-            <li>Built CLIP-based drone-survey pipeline for antenna alignment verification — <strong>0.733 IoU on LEVIR-CD+</strong>, deployed as Dockerized FastAPI with React UI.</li>
-            <li>Production AI anomaly-detection agents for <strong>Self-Healing Network (SON)</strong> — automatically mitigates tower-load hotspots without manual intervention.</li>
-            <li>Multi-TB Oracle/PostGIS geospatial digital twin with Kafka ingestion, Spark-on-EMR, and Elasticsearch for sub-second search across RF sites and sectors.</li>
-            <li>Mentored 10+ engineers; facilitated several intern-to-full-time conversions (2024–25). STEM mentor via National Academy Foundation.</li>
+            <li>Owns 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards powering 5G/5G-Advanced network planning, spectrum management, and FCC compliance for 500+ RF engineers.</li>
+            <li>Designed and deployed LLM and ML automation to production — <strong>13,000+ hours of annual operational ROI</strong> across network planning, anomaly detection, and capacity forecasting, supporting 5G rollout to 100M+ users.</li>
+            <li>Architected greenfield data platform from scratch — <strong>200+ Airflow DAGs</strong> orchestrating ingestion of tower telemetry, FCC feeds, OSS capacity data, and greenfield site builds into a multi-TB Oracle/PostGIS geospatial digital twin with Kafka streaming, Spark-on-EMR batch processing, and Elasticsearch for sub-second RF site search.</li>
+            <li>Built antenna alignment verification pipeline using CLIP-based drone imagery — <strong>0.733 IoU on LEVIR-CD+</strong>, deployed as Dockerized FastAPI with React UI.</li>
+            <li>Production AI anomaly-detection agents for <strong>Self-Healing Network (SON)</strong> — autonomous tower-load mitigation with zero manual intervention.</li>
+            <li>Mentored 10+ engineers with several intern-to-full-time conversions (2024–25); STEM mentor via National Academy Foundation.</li>
           </ul>
           <div class="exp-stack">Java · Spring Boot · React · Angular · Python · FastAPI · PyTorch · AWS · Kafka · Spark · PostGIS · Elasticsearch · Mapbox GL · Oracle · Kubernetes</div>
         </div>
@@ -1081,23 +1076,6 @@
     glow.style.display = 'none';
   }
 
-  /* ── TYPEWRITER ── */
-  const twEl    = document.getElementById('tw-text');
-  const phrases = ['Full Stack Engineer', 'AI / ML Builder', 'Robotics Hobbyist', 'K3s Homelab Nerd', 'Verizon · 5G Systems'];
-  let pi = 0, ci = 0, deleting = false;
-  function typeStep() {
-    const phrase = phrases[pi];
-    if (!deleting) {
-      twEl.textContent = phrase.slice(0, ++ci);
-      if (ci === phrase.length) { deleting = true; setTimeout(typeStep, 1800); return; }
-      setTimeout(typeStep, 68);
-    } else {
-      twEl.textContent = phrase.slice(0, --ci);
-      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(typeStep, 320); return; }
-      setTimeout(typeStep, 36);
-    }
-  }
-  setTimeout(typeStep, 1200);
 
   /* ── SCROLL REVEAL ── */
   const revealObs = new IntersectionObserver(entries => {
