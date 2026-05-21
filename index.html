@@ -250,6 +250,35 @@
     /* honeypot — hide from humans but keep in DOM for bots to fill */
     .hp { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
+    /* ── CONSENT BANNER ── */
+    .cookie-banner {
+      position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 200;
+      background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      padding: 14px 18px;
+      display: flex; align-items: center; gap: 18px;
+      max-width: 780px; margin: 0 auto;
+      font-size: .78rem; color: var(--mid); line-height: 1.55;
+      animation: bannerIn .4s cubic-bezier(.22,.61,.36,1);
+    }
+    @keyframes bannerIn { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .cookie-banner p { flex: 1; margin: 0; }
+    .cookie-banner strong { color: var(--text); font-weight: 600; }
+    .cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .cookie-btn {
+      font-family: 'Inter', sans-serif; font-size: .76rem; font-weight: 600;
+      padding: 7px 14px; border-radius: 5px; cursor: pointer;
+      transition: opacity .2s, border-color .15s, color .15s;
+    }
+    .cookie-btn-ghost { background: transparent; border: 1px solid var(--rule); color: var(--mid); }
+    .cookie-btn-ghost:hover { border-color: var(--gold); color: var(--text); }
+    .cookie-btn-fill  { background: var(--rust); border: 1px solid var(--rust); color: #fff; }
+    .cookie-btn-fill:hover { opacity: .87; }
+    @media (max-width: 640px) {
+      .cookie-banner { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+      .cookie-actions { justify-content: flex-end; }
+    }
+
     /* ── CURSOR GLOW ── */
     .cursor-glow {
       position: fixed; pointer-events: none; z-index: 0;
@@ -1523,6 +1552,39 @@
     termOutput.scrollTop = termOutput.scrollHeight;
   });
 
+  /* ── CONSENT BANNER / ANALYTICS ── */
+  (function () {
+    const KEY = 'analyticsConsent';
+    const banner = document.getElementById('cookieBanner');
+    if (!banner) return;
+
+    function loadAnalytics() {
+      if (document.querySelector('script[data-cf-beacon]')) return;
+      const s = document.createElement('script');
+      s.defer = true;
+      s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+      s.setAttribute('data-cf-beacon', '{"token": "7faa39d5c4bc42bb88af19da722098a1"}');
+      document.body.appendChild(s);
+    }
+
+    const choice = localStorage.getItem(KEY);
+    if (choice === 'accepted') {
+      loadAnalytics();
+    } else if (!choice) {
+      banner.hidden = false;
+    }
+
+    document.getElementById('cookieAccept').addEventListener('click', () => {
+      localStorage.setItem(KEY, 'accepted');
+      banner.hidden = true;
+      loadAnalytics();
+    });
+    document.getElementById('cookieDecline').addEventListener('click', () => {
+      localStorage.setItem(KEY, 'declined');
+      banner.hidden = true;
+    });
+  })();
+
   /* ── CONTACT FORM ── */
   (function () {
     const form   = document.getElementById('contactForm');
@@ -1579,5 +1641,16 @@
     });
   })();
 </script>
+
+<!-- Consent banner — Cloudflare Web Analytics loads only after explicit accept -->
+<div id="cookieBanner" class="cookie-banner" hidden>
+  <p>
+    This site uses <strong>Cloudflare Web Analytics</strong> — a privacy-friendly, cookieless tracker that records country-level visitor stats only. No personal data, no third-party cookies.
+  </p>
+  <div class="cookie-actions">
+    <button type="button" id="cookieDecline" class="cookie-btn cookie-btn-ghost">Decline</button>
+    <button type="button" id="cookieAccept"  class="cookie-btn cookie-btn-fill">Accept</button>
+  </div>
+</div>
 </body>
 </html>
