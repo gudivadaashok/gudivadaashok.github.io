@@ -61,7 +61,7 @@
 
     /* ── RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 95px; } /* keep anchored sections clear of the fixed nav + ticker */
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg);
@@ -180,6 +180,13 @@
     /* ══ SECTION ══ */
     .section { padding: 80px 0; border-top: 1px solid var(--rule); }
     .sec-n { font-family: 'JetBrains Mono', monospace; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--rust); margin-bottom: 10px; }
+    /* Flash feedback when a nav link targets a section that's already in view (e.g. Contact at page bottom) */
+    .sec-n.flash { animation: secFlash 1s ease; transform-origin: left center; }
+    @keyframes secFlash {
+      0%   { color: var(--rust); transform: scale(1); text-shadow: none; }
+      18%  { color: var(--text); transform: scale(1.12); text-shadow: 0 0 14px rgba(212,105,42,.55); }
+      100% { color: var(--rust); transform: scale(1); text-shadow: none; }
+    }
     .sec-t { font-size: clamp(1.5rem, 2.8vw, 2rem); font-weight: 700; letter-spacing: -.02em; margin-bottom: 44px; line-height: 1.2; }
 
     /* ══ ABOUT ══ */
@@ -233,6 +240,9 @@
     .exp-stack { font-family: 'JetBrains Mono', monospace; font-size: .67rem; color: var(--low); letter-spacing: .02em; line-height: 1.75; }
 
     /* ══ CONTACT ══ */
+    /* Last + shortest section — give it height so an anchor jump can bring the heading
+       to the top of the viewport instead of pinning it at the page bottom. */
+    #contact { min-height: 100vh; min-height: 100dvh; }
     .contact-intro { margin-bottom: 40px; }
     .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
     .c-head { font-size: 1.8rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 12px; }
@@ -693,8 +703,8 @@
       <p class="hero-title h-anim" style="--d:.32s">Senior Full-Stack Engineer · AI/ML · Geospatial Systems</p>
 
       <p class="hero-bio h-anim" style="--d:.44s">
-        10 years shipping production systems end-to-end. At Verizon, I own the tooling that
-        powers <strong>US 5G network planning</strong> — RF dashboards, geospatial pipelines,
+        10 years shipping production systems end-to-end. I own the tooling that
+        powers <strong>Verizon's 5G network planning</strong> — RF dashboards, geospatial pipelines,
         and <strong>ML-driven automation</strong> used daily by 500+ engineers.
         Outside work, I run a self-hosted K3s cluster on Proxmox and build autonomous robotics systems for fun.
       </p>
@@ -1250,6 +1260,18 @@
         entries.forEach(e => { if (e.isIntersecting) setActive('contact'); });
       }, { threshold: 0 }).observe(footer);
     }
+
+    // Contact is the last (short) section — at the page bottom an anchor click can't scroll
+    // anywhere, so flash the "04 — Contact" heading to confirm the jump landed.
+    const contactSecN = document.querySelector('#contact .sec-n');
+    document.querySelectorAll('a[href="#contact"]').forEach(a => {
+      a.addEventListener('click', () => {
+        if (!contactSecN) return;
+        contactSecN.classList.remove('flash');
+        void contactSecN.offsetWidth;   // reflow so the animation restarts on every click
+        contactSecN.classList.add('flash');
+      });
+    });
   })();
 
   /* ── HARDWARE × SOFTWARE CANVAS ── */
