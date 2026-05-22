@@ -1817,26 +1817,21 @@
       const aspect = camera.right * 2 / FRUSTUM_H;
       const floorY = getFloorY();
 
-      // ── SPOT ── trots along the footer first, turns at viewport edges (drone follows it)
-      const stepT = t * 6;
+      // ── ROVER ── drives along the footer first, turns at viewport edges (drone follows it)
       const halfWidth = FRUSTUM_H * aspect / 2 * 0.88;
       walk.x += walk.dir * walk.speed;
       if (walk.x >  halfWidth) { walk.dir = -1; walk.x =  halfWidth; }
       if (walk.x < -halfWidth) { walk.dir =  1; walk.x = -halfWidth; }
       robot.position.x = walk.x;
-      // Feet pin to the footer top edge; body bobs at each diagonal touchdown
-      robot.position.y = floorY + 0.95 * robot.scale.y + Math.abs(Math.sin(stepT)) * 0.05;
+      // Wheels rest on the footer top edge; tiny suspension jitter
+      robot.position.y = floorY + 0.44 * robot.scale.y + Math.sin(t * 9) * 0.012;
       // Face direction of travel (built facing +Z → turn -90° to face +X, +90° for -X)
       robot.rotation.y = walk.dir === 1 ? -Math.PI / 2 : Math.PI / 2;
-      // Trot gait — diagonal pairs in phase (front-left + back-right, then front-right + back-left)
-      const swing = Math.sin(stepT) * 0.4;
-      const lp = robot.userData.legPivots;
-      lp[0].rotation.x =  swing;  // front-left
-      lp[1].rotation.x = -swing;  // front-right
-      lp[2].rotation.x = -swing;  // back-left
-      lp[3].rotation.x =  swing;  // back-right
+      // Wheels roll forward (constant local direction); roof LIDAR puck spins
+      robot.userData.wheels.forEach(w => w.rotation.x += 0.16);
+      robot.userData.lidar.rotation.y += 0.16;
 
-      // ── DRONE ── escorts Spot: hovers above and scouts slightly ahead, smooth-follows
+      // ── DRONE ── escorts the rover: hovers above and scouts slightly ahead, smooth-follows
       const targetX = walk.x + walk.dir * 0.9;                          // lead in travel direction
       // Altitude: high base + slow climb/dive sweep + small rotor jitter
       const hoverY  = floorY + FRUSTUM_H * 0.58
@@ -1879,12 +1874,12 @@
       // Dark mode: rainbow MeshNormalMaterial (current Bruno look).
       // Light mode: solid Lambert with lights — needed because the rainbow normal-mapping
       // washes out against the cream background and the drone/robot become invisible.
-      const matRainbow    = new THREE.MeshNormalMaterial({ flatShading: true });
-      const matDroneLight = new THREE.MeshLambertMaterial({ color: 0x2C2820, flatShading: true }); // near-black
-      // Spot keeps its real colours in BOTH themes — yellow body, black legs
-      const matSpotYellow = new THREE.MeshLambertMaterial({ color: 0xF2B100, flatShading: true });
-      const matSpotBlack  = new THREE.MeshLambertMaterial({ color: 0x1C1C1C, flatShading: true });
-      const mat = matRainbow; // drone build uses this; swapped per-mesh by syncTheme()
+      // Dark theme: both wear the rainbow MeshNormalMaterial.
+      // Light theme: solid rust drone + gold car (emissive keeps them off-muddy).
+      const matRainbow = new THREE.MeshNormalMaterial({ flatShading: true });
+      const matDrone   = new THREE.MeshLambertMaterial({ color: 0xC0532A, emissive: 0x2a120a, flatShading: true }); // rust
+      const matCar     = new THREE.MeshLambertMaterial({ color: 0xC8902C, emissive: 0x241a06, flatShading: true }); // gold
+      const mat = matRainbow; // build-time placeholder; syncTheme assigns the real material
 
       // Lights drive the Lambert materials. Generous ambient so the yellow stays bright
       // (not muddy brown) on the shadowed side, in both themes.
@@ -1909,66 +1904,52 @@
       drone.scale.setScalar(0.85);
       scene.add(drone);
 
-      // ── ROBOT ── Boston-Dynamics-"Spot"-style quadruped, built facing +Z (travel dir)
-      // Two-tone like the real thing: yellow chassis + thighs, black hips + shins + feet.
+      // ── ROBOT ── autonomous rover / self-driving car, built facing +Z (travel dir)
+      // Fixed gold (matCar) in both themes so it stays distinct from the drone.
       robot = new THREE.Group();
-      // Chunky chassis (length runs along Z = the travel axis)
-      robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 1.55), matSpotYellow));
-      // Black hip housings where the legs mount
-      [[0.33, 0.6], [-0.33, 0.6], [0.33, -0.6], [-0.33, -0.6]].forEach(([x, z]) => {
-        const h = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.36, 0.36), matSpotBlack);
-        h.position.set(x, -0.05, z);
-        robot.add(h);
-      });
-      // Front sensor head: yellow housing + black camera face
-      const sHead = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.32, 0.34), matSpotYellow);
-      sHead.position.set(0, 0.2, 0.82);
-      const sFace = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.24, 0.06), matSpotBlack);
-      sFace.position.set(0, 0.2, 1.0);
-      robot.add(sHead, sFace);
+      // Lower chassis (length runs along Z = the travel axis)
+      robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.3, 1.6), matCar));
+      // Upper cabin, set back slightly
+      const cabin = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.3, 0.9), matCar);
+      cabin.position.set(0, 0.28, -0.05);
+      robot.add(cabin);
+      // Windshield strip (front of cabin) + front sensor bar
+      const windshield = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.22, 0.06), matCar);
+      windshield.position.set(0, 0.3, 0.39);
+      const sensorBar = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.1, 0.05), matCar);
+      sensorBar.position.set(0, 0.04, 0.83);
+      robot.add(windshield, sensorBar);
+      // Spinning roof LIDAR puck — the self-driving-car signature
+      const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.14, 16), matCar);
+      lidar.position.set(0, 0.53, -0.05);
+      robot.add(lidar);
 
-      // One leg: swing pivot → forward-leaning yellow thigh → knee → back-leaning black shin → foot.
-      // Nested groups keep the segments joined at the knee like the real Spot.
-      function spotLeg() {
-        const swing = new THREE.Group();              // gait rotates this around X
-        const thighLen = 0.5, shinLen = 0.48;
-        const thighGrp = new THREE.Group();
-        thighGrp.rotation.x = -0.35;                  // thigh leans down-forward
-        const thigh = new THREE.Mesh(new THREE.BoxGeometry(0.15, thighLen, 0.15), matSpotYellow);
-        thigh.position.y = -thighLen / 2;
-        thighGrp.add(thigh);
-        swing.add(thighGrp);
-        const kneeGrp = new THREE.Group();
-        kneeGrp.position.y = -thighLen;
-        kneeGrp.rotation.x = 0.85;                    // sharp knee bend, back toward the foot
-        const shin = new THREE.Mesh(new THREE.BoxGeometry(0.09, shinLen, 0.09), matSpotBlack);
-        shin.position.y = -shinLen / 2;
-        const foot = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.07, 0.16), matSpotBlack);
-        foot.position.set(0, -shinLen, 0.03);
-        kneeGrp.add(shin, foot);
-        thighGrp.add(kneeGrp);
-        return swing;
-      }
-      // Hips at the four lower corners. Order: FL, FR, BL, BR (front = +Z)
-      const legPivots = [];
-      [[-0.33, 0.6], [0.33, 0.6], [-0.33, -0.6], [0.33, -0.6]].forEach(([x, z]) => {
-        const leg = spotLeg();
-        leg.position.set(x, -0.05, z);
-        robot.add(leg);
-        legPivots.push(leg);
+      // Four wheels — each in a spin group so rotation.x rolls it; axle laid along X
+      const wheels = [];
+      [[-0.41, 0.55], [0.41, 0.55], [-0.41, -0.55], [0.41, -0.55]].forEach(([x, z]) => {
+        const spin = new THREE.Group();
+        spin.position.set(x, -0.18, z);
+        const tyre = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.16, 18), matCar);
+        tyre.rotation.z = Math.PI / 2;
+        const hub  = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.17, 12), matCar);
+        hub.rotation.z = Math.PI / 2;
+        spin.add(tyre, hub);
+        robot.add(spin);
+        wheels.push(spin);
       });
-      robot.userData.legPivots = legPivots;
+      robot.userData.wheels = wheels;
+      robot.userData.lidar = lidar;
       // Smaller on portrait phones so it doesn't dominate the screen
-      robot.scale.setScalar(aspect < 0.75 ? 0.45 : 0.6);
+      robot.scale.setScalar(aspect < 0.75 ? 0.5 : 0.62);
       // Start walking from the left edge
       walk.x = -FRUSTUM_H * aspect / 2 * 0.88;
       scene.add(robot);
 
-      // Drone follows the theme (rainbow in dark, dark-grey in light).
-      // Spot keeps its built-in yellow/black in both themes, so it's left out of the swap.
+      // Dark theme → rainbow for both; light theme → rust drone + gold car.
       function syncTheme() {
         const isLight = document.documentElement.dataset.theme === 'light';
-        drone.traverse(o => { if (o.isMesh) o.material = isLight ? matDroneLight : matRainbow; });
+        drone.traverse(o => { if (o.isMesh) o.material = isLight ? matDrone : matRainbow; });
+        robot.traverse(o => { if (o.isMesh) o.material = isLight ? matCar   : matRainbow; });
       }
       syncTheme();
       new MutationObserver(syncTheme).observe(document.documentElement, {
