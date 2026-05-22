@@ -147,6 +147,9 @@
     /* ══ HERO ══ */
     #hero { padding-top: 176px; padding-bottom: 80px; border-bottom: 1px solid var(--rule); }
     .hero-status { display: inline-flex; align-items: center; gap: 9px; font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--low); margin-bottom: 28px; }
+    /* Blinking terminal caret on the availability line */
+    .hero-status .caret { display: inline-block; width: 7px; height: 1em; margin-left: 3px; background: var(--rust); vertical-align: text-bottom; animation: caretBlink 1.1s step-end infinite; }
+    @keyframes caretBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
     /* Hero status: tiny clickable procedural planet with atmosphere halo */
     .planet-btn {
       width: 32px; height: 32px; padding: 0; flex-shrink: 0;
@@ -696,7 +699,7 @@
     <span class="code-float" style="right:1%;top:78%;--d:6s;--dur:9s">kubectl get pods -n prod</span>
 
     <div class="hero-inner">
-      <div class="hero-status h-anim" style="--d:.05s"><button type="button" class="planet-btn" id="heroPlanetBtn" title="click to regenerate" aria-label="Regenerate planet"><canvas id="heroPlanet" width="64" height="64"></canvas></button>Open to work · Reston, VA</div>
+      <div class="hero-status h-anim" style="--d:.05s"><button type="button" class="planet-btn" id="heroPlanetBtn" title="click to regenerate" aria-label="Regenerate planet"><canvas id="heroPlanet" width="64" height="64"></canvas></button>Open to work · Reston, VA<span class="caret" aria-hidden="true"></span></div>
       <h1 class="hero-name h-anim" style="--d:.18s">Ashok<br><span class="accent">Gudivada.</span></h1>
 
       <!-- Typewriter title -->
@@ -753,6 +756,7 @@
       </div>
       <ul class="facts reveal" style="--d:.22s">
         <li><span class="fk">Location</span><span class="fv">Reston, VA</span></li>
+        <li><span class="fk">Open to</span><span class="fv">NYC · DMV · NJ · Atlanta · TX · SF Bay</span></li>
         <li><span class="fk">Current role</span><span class="fv">Sr. Software Engineer, Verizon</span></li>
         <li><span class="fk">At Verizon since</span><span class="fv">2017 (promoted 2022)</span></li>
         <li><span class="fk">Previous</span><span class="fv">Microland, India 2014–15</span></li>
