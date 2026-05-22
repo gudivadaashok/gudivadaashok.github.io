@@ -147,7 +147,8 @@
     /* ══ HERO ══ */
     #hero { padding-top: 176px; padding-bottom: 80px; border-bottom: 1px solid var(--rule); }
     .hero-status { display: inline-flex; align-items: center; gap: 9px; font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--low); margin-bottom: 28px; }
-    /* Blinking terminal caret on the availability line */
+    /* Cycling location + blinking terminal caret on the availability line */
+    .loc-cycle { color: var(--rust); }
     .hero-status .caret { display: inline-block; width: 7px; height: 1em; margin-left: 3px; background: var(--rust); vertical-align: text-bottom; animation: caretBlink 1.1s step-end infinite; }
     @keyframes caretBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
     /* Hero status: tiny clickable procedural planet with atmosphere halo */
@@ -699,7 +700,7 @@
     <span class="code-float" style="right:1%;top:78%;--d:6s;--dur:9s">kubectl get pods -n prod</span>
 
     <div class="hero-inner">
-      <div class="hero-status h-anim" style="--d:.05s"><button type="button" class="planet-btn" id="heroPlanetBtn" title="click to regenerate" aria-label="Regenerate planet"><canvas id="heroPlanet" width="64" height="64"></canvas></button>Open to work · Reston, VA<span class="caret" aria-hidden="true"></span></div>
+      <div class="hero-status h-anim" style="--d:.05s"><button type="button" class="planet-btn" id="heroPlanetBtn" title="click to regenerate" aria-label="Regenerate planet"><canvas id="heroPlanet" width="64" height="64"></canvas></button>Open to work · <span id="locCycle" class="loc-cycle">SF Bay</span><span class="caret" aria-hidden="true"></span></div>
       <h1 class="hero-name h-anim" style="--d:.18s">Ashok<br><span class="accent">Gudivada.</span></h1>
 
       <!-- Typewriter title -->
@@ -714,7 +715,6 @@
       <div class="hero-actions h-anim" style="--d:.56s">
         <a href="#contact" class="btn btn-fill">Get in touch →</a>
         <a href="#experience" class="btn btn-outline">Experience</a>
-        <a href="resume.pdf" download class="btn btn-outline">↓ Resume</a>
         <button class="cmdk-hint" id="cmdkBtn" aria-label="Open terminal"><kbd>⌘</kbd><kbd>K</kbd> terminal</button>
       </div>
       <div class="stats h-anim" style="--d:.68s">
@@ -756,7 +756,7 @@
       </div>
       <ul class="facts reveal" style="--d:.22s">
         <li><span class="fk">Location</span><span class="fv">Reston, VA</span></li>
-        <li><span class="fk">Open to</span><span class="fv">NYC · DMV · NJ · Atlanta · TX · SF Bay</span></li>
+        <li><span class="fk">Open to</span><span class="fv">SF Bay · NYC · Seattle · Austin · Boston · DMV · + major US hubs</span></li>
         <li><span class="fk">Current role</span><span class="fv">Sr. Software Engineer, Verizon</span></li>
         <li><span class="fk">At Verizon since</span><span class="fv">2017 (promoted 2022)</span></li>
         <li><span class="fk">Previous</span><span class="fv">Microland, India 2014–15</span></li>
@@ -1090,6 +1090,30 @@
     glow.style.display = 'none';
   }
 
+
+  /* ── CYCLING AVAILABILITY LOCATION ── erase current, type next (with the caret trailing) */
+  (function () {
+    const el = document.getElementById('locCycle');
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const places = ['SF Bay', 'NYC', 'Seattle', 'Boston', 'Austin', 'LA',
+                    'DMV', 'Denver', 'Raleigh', 'Atlanta', 'Chicago', 'San Diego',
+                    'Salt Lake City', 'Miami', 'Phoenix'];
+    let pi = 0, ci = places[0].length, deleting = true;
+    function step() {
+      const word = places[pi];
+      if (deleting) {
+        el.textContent = word.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % places.length; setTimeout(step, 400); return; }
+        setTimeout(step, 45);
+      } else {
+        el.textContent = word.slice(0, ++ci);
+        if (ci === word.length) { deleting = true; setTimeout(step, 1900); return; }
+        setTimeout(step, 75);
+      }
+    }
+    setTimeout(step, 1900);   // hold the first location, then start erasing
+  })();
 
   /* ── SCROLL REVEAL ── */
   const revealObs = new IntersectionObserver(entries => {
