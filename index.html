@@ -498,11 +498,13 @@
       font-family: 'JetBrains Mono', monospace; font-size: .55rem;
       letter-spacing: .06em; color: var(--low); white-space: nowrap;
     }
+    .sig-label .sig-note { color: var(--low); opacity: .85; padding-left: 10px; border-left: 1px solid currentColor; }
     @media (max-width: 768px) {
       .sig-device { flex: 0 0 56px; }
       .sig-device span { display: none; }
       .sig-device svg { width: 30px; height: 30px; }
       .sig-label { gap: 8px; }
+      .sig-label .sig-note { display: none; }
       .sig-label span { font-size: .48rem; letter-spacing: .03em; }
     }
     /* ── 3D SHAPES STRIP (Three.js, Bruno-Simon-style) ── */
@@ -893,7 +895,8 @@
     <span style="color:var(--rust)">── Low-band</span>
     <span style="color:rgba(212,105,42,.65)">── Mid-band</span>
     <span style="color:var(--gold)">── C-band</span>
-    <span style="color:rgba(168,134,74,.55)">── mmWave</span>
+    <span style="color:rgba(140,108,52,.9)">── mmWave</span>
+    <span class="sig-note">higher frequency · more capacity · shorter reach</span>
   </div>
 </div>
 
@@ -1572,11 +1575,30 @@
 
     // Wave definitions: { freq (cycles visible), amp (px), speed, color, alpha, width }
     const WAVES = [
-      { freq: 2.2,  amp: 28, speed: 0.038, color: [212,105, 42], alpha: 0.90, lw: 2.2, label:'Low-band' },
-      { freq: 3.6,  amp: 20, speed: 0.052, color: [212,105, 42], alpha: 0.55, lw: 1.6, label:'Mid-band' },
-      { freq: 5.4,  amp: 14, speed: 0.071, color: [168,134, 74], alpha: 0.75, lw: 1.4, label:'C-band'   },
-      { freq: 8.8,  amp:  9, speed: 0.095, color: [168,134, 74], alpha: 0.40, lw: 1.0, label:'mmWave'   },
+      { freq: 2.2,  amp: 28, speed: 0.038, color: [212,105, 42], alpha: 0.90, lw: 2.2, label:'Low-band', reach: 1.00 },
+      { freq: 3.6,  amp: 20, speed: 0.052, color: [212,105, 42], alpha: 0.55, lw: 1.6, label:'Mid-band', reach: 0.82 },
+      { freq: 5.4,  amp: 14, speed: 0.071, color: [168,134, 74], alpha: 0.75, lw: 1.4, label:'C-band',   reach: 0.62 },
+      { freq: 8.8,  amp:  9, speed: 0.095, color: [168,134, 74], alpha: 0.40, lw: 1.0, label:'mmWave',   reach: 0.30 },
     ];
+
+    // Signal envelope along the path: higher bands lose strength faster and die out before the device.
+    function env(w, xr) {
+      const fadeIn = Math.min(xr / 0.08, 1);
+      if (w.reach >= 1) return fadeIn * Math.min((1 - xr) / 0.08, 1);
+      const d = xr / w.reach;                       // 0 at the cell site, 1 at the edge of coverage
+      return d >= 1 ? 0 : fadeIn * Math.pow(1 - d, 0.7);
+    }
+
+    // Stroke colour for a band: full strength at the cell site, fading to nothing where coverage ends.
+    function bandStroke(w, a) {
+      const rgb = `${w.color[0]},${w.color[1]},${w.color[2]}`;
+      if (w.reach >= 1) return `rgba(${rgb},${a})`;
+      const g = ctx.createLinearGradient(0, 0, W * w.reach, 0);
+      g.addColorStop(0, `rgba(${rgb},${a})`);
+      g.addColorStop(0.55, `rgba(${rgb},${a * 0.75})`);
+      g.addColorStop(1, `rgba(${rgb},0)`);
+      return g;
+    }
 
     function resize() {
       W = cvs.width  = cvs.offsetWidth;
@@ -1586,16 +1608,16 @@
     function drawWave(w, phase) {
       const cy = H / 2;
       ctx.beginPath();
-      ctx.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${w.alpha})`;
+      ctx.strokeStyle = bandStroke(w, w.alpha);
       ctx.lineWidth   = w.lw;
       ctx.lineCap     = 'round';
 
       // Fade in from left edge, fade out near right edge
       for (let x = 0; x <= W; x += 1.5) {
         const xr = x / W;
-        // envelope: fade in over first 8%, fade out over last 8%
-        const env = Math.min(xr / 0.08, 1) * Math.min((1 - xr) / 0.08, 1);
-        const y = cy + w.amp * env * Math.sin(2 * Math.PI * w.freq * xr - phase);
+        const e = env(w, xr);
+        if (w.reach < 1 && xr > w.reach + 0.01) break;
+        const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
         x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
@@ -1606,13 +1628,14 @@
       const cy = H / 2;
       [w.lw * 5, w.lw * 2.5].forEach((lw, i) => {
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${i === 0 ? 0.06 : 0.14})`;
+        ctx.strokeStyle = bandStroke(w, i === 0 ? 0.06 : 0.14);
         ctx.lineWidth = lw;
         ctx.lineCap = 'round';
         for (let x = 0; x <= W; x += 3) {
           const xr = x / W;
-          const env = Math.min(xr / 0.08, 1) * Math.min((1 - xr) / 0.08, 1);
-          const y = cy + w.amp * env * Math.sin(2 * Math.PI * w.freq * xr - phase);
+          const e = env(w, xr);
+          if (w.reach < 1 && xr > w.reach + 0.01) break;
+          const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
           x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
         ctx.stroke();
@@ -1624,11 +1647,12 @@
       // position: x sweeps 0→W continuously
       const speed = w.speed * 18; // pixels per frame equivalent
       const xr = ((t * speed * 0.012) % 1.05) - 0.025;
-      if (xr < 0 || xr > 1) return;
+      if (xr < 0 || xr > Math.min(1, w.reach)) return;
       const x = xr * W;
       const cy = H / 2;
-      const env = Math.min(xr/0.08,1) * Math.min((1-xr)/0.08,1);
-      const y = cy + w.amp * env * Math.sin(2 * Math.PI * w.freq * xr - phase);
+      const e = env(w, xr);
+      if (w.reach < 1 && e < 0.04) return;
+      const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
 
       const grd = ctx.createRadialGradient(x, y, 0, x, y, 6);
       grd.addColorStop(0, `rgba(${w.color[0]},${w.color[1]},${w.color[2]},0.9)`);
