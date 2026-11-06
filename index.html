@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Ashok Gudivada — Full Stack Engineer with AI/ML at Verizon. 10 years building production systems: 5G network tooling, AI/ML-driven automation, geospatial pipelines." />
+  <meta name="description" content="Ashok Gudivada — Senior Software Engineer at PenFed Credit Union, previously Verizon. 10 years building production systems: 5G network tooling, AI/ML-driven automation, geospatial pipelines." />
   <meta property="og:title" content="Ashok Gudivada — Full Stack Engineer" />
-  <meta property="og:description" content="10 years building full-stack systems in production. 5G network tooling, AI/ML automation, geospatial pipelines at Verizon." />
+  <meta property="og:description" content="10 years building full-stack systems in production. 5G network tooling, AI/ML automation, geospatial pipelines. Now at PenFed Credit Union." />
   <meta property="og:url" content="https://ashokg.dev" />
   <meta property="og:type" content="website" />
   <meta name="robots" content="index, follow" />
@@ -241,6 +241,9 @@
     .exp-bul li { font-size: .85rem; color: var(--mid); line-height: 1.72; font-weight: 300; padding-left: 16px; position: relative; }
     .exp-bul li::before { content: '›'; position: absolute; left: 0; color: var(--rust); }
     .exp-bul li strong { color: var(--text); font-weight: 500; }
+    .proj-link { color: inherit; text-decoration: none; }
+    .proj-link:hover { color: var(--rust); }
+    .proj-link .arr { font-size: .85em; color: var(--rust); margin-left: 4px; }
     .exp-stack { font-family: 'JetBrains Mono', monospace; font-size: .67rem; color: var(--low); letter-spacing: .02em; line-height: 1.75; }
 
     /* ══ CONTACT ══ */
@@ -502,9 +505,8 @@
       position: fixed; inset: 0; width: 100vw;
       height: 100vh;          /* fallback for browsers without dvh */
       height: 100dvh;         /* iOS Safari: matches visible viewport so floor lines up with the footer */
-      pointer-events: none; z-index: 5; opacity: .72;
+      pointer-events: none; z-index: 5; opacity: .9;
     }
-    /* Light mode uses solid Lambert materials — bump opacity so they read confidently on cream bg */
     [data-theme="light"] #shapesCvs { opacity: .95; }
 
     @media (max-width: 480px) {
@@ -617,6 +619,7 @@
     <li><a href="#about"      data-section="about">About</a></li>
     <li><a href="#skills"     data-section="skills">Skills</a></li>
     <li><a href="#experience" data-section="experience">Experience</a></li>
+    <li><a href="#projects"   data-section="projects">Projects</a></li>
     <li><a href="#contact"    data-section="contact">Contact</a></li>
     <li>
       <button class="theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light / dark">
@@ -684,6 +687,7 @@
   <a href="#about"      onclick="closeMenu()" data-section="about">About</a>
   <a href="#skills"     onclick="closeMenu()" data-section="skills">Skills</a>
   <a href="#experience" onclick="closeMenu()" data-section="experience">Experience</a>
+  <a href="#projects"   onclick="closeMenu()" data-section="projects">Projects</a>
   <a href="#contact"    onclick="closeMenu()" class="panel-cta" data-section="contact">Contact →</a>
 </div>
 
@@ -707,9 +711,9 @@
       <p class="hero-title h-anim" style="--d:.32s">Senior Full-Stack Engineer · AI/ML · Geospatial Systems</p>
 
       <p class="hero-bio h-anim" style="--d:.44s">
-        10 years shipping production systems end-to-end. I own the tooling that
-        powers <strong>Verizon's 5G network planning</strong>: RF dashboards, geospatial pipelines,
-        and <strong>AI/ML-driven automation</strong> used daily by 500+ engineers.
+        10 years shipping production systems end-to-end. Now a Senior Software Engineer at
+        <strong>PenFed Credit Union</strong>. Before that, I built the tooling behind <strong>Verizon's 5G network planning</strong>:
+        RF dashboards, geospatial pipelines, and <strong>AI/ML-driven automation</strong> used daily by 500+ engineers.
         Outside work, I run a self-hosted K3s cluster on Proxmox and build autonomous robotics systems for fun.
       </p>
       <div class="hero-actions h-anim" style="--d:.56s">
@@ -734,7 +738,7 @@
     <h2 class="sec-t reveal" style="--d:.08s">Background</h2>
     <div class="about-grid">
       <div class="about-copy reveal" style="--d:.14s">
-        <p>10 years shipping production systems end-to-end. At Verizon, I lead a team of 10+ engineers building and owning 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards that power <strong>RF planning and capacity decisions</strong> across the US 5G network, used daily by 500+ engineers.</p>
+        <p>10 years shipping production systems end-to-end. I'm now a Senior Software Engineer at <strong>PenFed Credit Union</strong> in McLean, VA. Before that, at Verizon (2017–2026), I led a team of 10+ engineers building and owning 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards that powered <strong>RF planning and capacity decisions</strong> across the US 5G network, used daily by 500+ engineers.</p>
         <p>On the AI/ML side, I've taken models from <strong>prototype to production</strong>: anomaly-detection agents, Prophet/LSTM capacity-planning models, and a CLIP-based drone vision system, all running on real infrastructure, used by real teams.</p>
         <p>Outside work, <strong>I build robots</strong>. ROS pipelines, embedded hardware, real-time perception systems, hardware-in-the-loop testing, all running on a self-hosted 5-node K3s cluster I put together for exactly this kind of tinkering, plus a growing pile of components I'm either fixing or breaking.</p>
 
@@ -757,9 +761,9 @@
       <ul class="facts reveal" style="--d:.22s">
         <li><span class="fk">Location</span><span class="fv">Reston, VA</span></li>
         <li><span class="fk">Open to</span><span class="fv">SF Bay · NYC · Seattle · Austin · Boston · DMV · + major US hubs</span></li>
-        <li><span class="fk">Current role</span><span class="fv">Sr. Software Engineer, Verizon</span></li>
-        <li><span class="fk">At Verizon since</span><span class="fv">2017 (promoted 2022)</span></li>
-        <li><span class="fk">Previous</span><span class="fv">Microland, India 2014–15</span></li>
+        <li><span class="fk">Current role</span><span class="fv">Sr. Software Engineer, PenFed Credit Union</span></li>
+        <li><span class="fk">Previous</span><span class="fv">Verizon, 2017–2026</span></li>
+        <li><span class="fk">Earlier</span><span class="fv">Microland, India 2014–15</span></li>
         <li><span class="fk">Interests</span><span class="fv">Electronics · Robotics · IoT</span></li>
         <li><span class="fk">Looking for</span><span class="fv">Senior / Staff Eng roles</span></li>
         <li><span class="fk">Status</span><span class="fv" style="color:var(--rust)">● Available</span></li>
@@ -894,16 +898,26 @@
     <p class="sec-n reveal">03 — Experience</p>
     <h2 class="sec-t reveal" style="--d:.08s">Work history</h2>
     <div>
+      <div class="exp-item reveal" style="--d:.1s">
+        <div>
+          <div class="exp-period">2026 — Present</div>
+          <span class="co-tag">PenFed</span>
+        </div>
+        <div>
+          <div class="exp-role">Senior Software Engineer</div>
+          <div class="exp-co">PenFed Credit Union · McLean, VA</div>
+        </div>
+      </div>
       <div class="exp-item reveal" style="--d:.12s">
         <div>
-          <div class="exp-period">2017 — Present<br><span style="color:var(--low)">Sr. Eng from 2022</span></div>
+          <div class="exp-period">2017 — 2026</div>
           <span class="co-tag">Verizon</span>
         </div>
         <div>
           <div class="exp-role">Senior Software Engineer</div>
           <div class="exp-co">Verizon · Reston, VA</div>
           <ul class="exp-bul">
-            <li>Owns 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards powering 5G/5G-Advanced network planning, spectrum management, and FCC compliance for 500+ RF engineers.</li>
+            <li>Owned 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards powering 5G/5G-Advanced network planning, spectrum management, and FCC compliance for 500+ RF engineers.</li>
             <li>Designed and deployed LLM and ML automation to production: <strong>13,000+ hours of annual operational ROI</strong> across network planning, anomaly detection, and capacity forecasting, supporting 5G rollout to 100M+ users.</li>
             <li>Architected greenfield data platform from scratch: <strong>200+ Airflow DAGs</strong> orchestrating ingestion of tower telemetry, FCC feeds, OSS capacity data, and greenfield site builds into a multi-TB Oracle/PostGIS geospatial digital twin with Kafka streaming, Spark-on-EMR batch processing, and Elasticsearch for sub-second RF site search.</li>
             <li>Built antenna alignment verification pipeline using CLIP-based drone imagery: <strong>0.733 IoU on LEVIR-CD+</strong>, deployed as Dockerized FastAPI with React UI.</li>
@@ -932,10 +946,36 @@
   </section>
 </div>
 
+<!-- PROJECTS -->
+<div class="wrap">
+  <section class="section" id="projects">
+    <p class="sec-n reveal">04 — Projects</p>
+    <h2 class="sec-t reveal" style="--d:.08s">Selected work</h2>
+    <div>
+      <div class="exp-item reveal" style="--d:.12s">
+        <div>
+          <div class="exp-period">2026</div>
+          <span class="co-tag">Computer Vision</span>
+        </div>
+        <div>
+          <div class="exp-role"><a class="proj-link" href="https://ashokg.dev/fpcv-companion/" target="_blank" rel="noopener">Vision Bench<span class="arr">↗&#xFE0E;</span></a></div>
+          <div class="exp-co">Interactive companion to <em>First Principles of Computer Vision</em> (Shree Nayar)</div>
+          <ul class="exp-bul">
+            <li>Hands-on, in-browser lab for classic vision algorithms: drop in an image and step through each stage of the pipeline with live canvases, controls, and the math behind it.</li>
+            <li>Binary images module: histogram thresholding with <strong>Otsu auto-threshold</strong>, 4/8-connected <strong>component labeling</strong>, and per-object area, centroid, orientation, and roundedness from second moments.</li>
+            <li>Modules for image processing, edge detection, photometric stereo, and optical flow. All processing runs client-side, so images never leave the device.</li>
+          </ul>
+          <div class="exp-stack">JavaScript · Canvas API · Image Processing · Computer Vision</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <!-- CONTACT -->
 <div class="wrap">
   <section class="section" id="contact">
-    <p class="sec-n reveal">04 — Contact</p>
+    <p class="sec-n reveal">05 — Contact</p>
     <div class="contact-intro reveal" style="--d:.08s">
       <h3 class="c-head">Get in <span class="accent">touch.</span></h3>
       <p class="c-note">Open to Senior and Staff engineering roles. Feel free to reach out about job opportunities, collaborations, or just to talk tech. I usually reply within 24 hours.</p>
@@ -1185,7 +1225,9 @@
       '<span class="t-key">Hobby</span>      Raspberry Pi · Arduino · ROS · Proxmox · K3s',
     ],
     experience: () => [
-      '<span class="t-val">Verizon</span> · Senior Software Engineer · 2017–Present',
+      '<span class="t-val">PenFed Credit Union</span> · Senior Software Engineer · 2026–Present',
+      '',
+      '<span class="t-val">Verizon</span> · Senior Software Engineer · 2017–2026',
       '  40+ Java/Python microservices · 30+ React/Angular dashboards',
       '  13k+ hrs ROI/yr from AI/ML automation · 100M+ 5G users',
       '',
@@ -1195,10 +1237,11 @@
     projects: () => [
       '<span class="t-val">Openclaw</span>        RAG/AX platform · LangChain · Pinecone · React',
       '<span class="t-val">CLIP Drone</span>      Change detection · 0.733 IoU on LEVIR-CD+',
-      '<span class="t-val">SON Agents</span>      Anomaly detection · Running in Verizon prod',
+      '<span class="t-val">SON Agents</span>      Anomaly detection · Shipped to Verizon prod',
       '<span class="t-val">RF Heatmap</span>      Mapbox GL · GeoServer · 10M+ events/day',
       '<span class="t-val">K3s Homelab</span>     5-node Proxmox cluster · OPNsense · Grafana',
       '<span class="t-val">LLM Diagrams</span>    –214 hrs/capability · –$8,992/unit',
+      '<span class="t-val">Vision Bench</span>    Interactive CV lab · ashokg.dev/fpcv-companion',
     ],
     contact: () => [
       '<span class="t-key">email</span>    hello@ashokg.dev',
@@ -1230,7 +1273,7 @@
       '  Dataset : LEVIR-CD+ (changed pairs)',
       '  <span class="t-key">IoU     : 0.733</span>  ← best checkpoint',
       '  Deploy  : FastAPI (Docker) + React UI',
-      '  Status  : Running in Verizon field ops',
+      '  Status  : Shipped to Verizon field ops',
     ],
   };
 
@@ -1290,7 +1333,7 @@
     }
 
     // Contact is the last (short) section — at the page bottom an anchor click can't scroll
-    // anywhere, so flash the "04 — Contact" heading to confirm the jump landed.
+    // anywhere, so flash the "05 — Contact" heading to confirm the jump landed.
     const contactSecN = document.querySelector('#contact .sec-n');
     document.querySelectorAll('a[href="#contact"]').forEach(a => {
       a.addEventListener('click', () => {
@@ -1852,9 +1895,12 @@
       if (walk.x < -halfWidth) { walk.dir =  1; walk.x = -halfWidth; }
       robot.position.x = walk.x;
       // Wheels rest on the footer top edge; tiny suspension jitter
-      robot.position.y = floorY + 0.44 * robot.scale.y + Math.sin(t * 9) * 0.012;
-      // Face direction of travel (built facing +Z → turn -90° to face +X, +90° for -X)
-      robot.rotation.y = walk.dir === 1 ? -Math.PI / 2 : Math.PI / 2;
+      robot.position.y = floorY + robot.userData.groundOffset * robot.scale.y + Math.sin(t * 9) * 0.012;
+      // Face direction of travel (built facing +Z → +90° faces +X, -90° faces -X),
+      // angled ~25° toward the viewer for a three-quarter view; ease through turns
+      const yawTarget = walk.dir === 1 ? Math.PI / 2 - 0.45 : -Math.PI / 2 + 0.45;
+      const yawG = robot.userData.yaw;
+      yawG.rotation.y += (yawTarget - yawG.rotation.y) * 0.12;
       // Wheels roll forward (constant local direction); roof LIDAR puck spins
       robot.userData.wheels.forEach(w => w.rotation.x += 0.16);
       robot.userData.lidar.rotation.y += 0.16;
@@ -1871,7 +1917,8 @@
       drone.position.set(nx, ny, 0);
       drone.rotation.z = -(nx - px) * 3.0;   // bank into the chase
       drone.rotation.x =  (ny - py) * 1.5;   // pitch with vertical drift
-      drone.userData.rotors.forEach(r => r.rotation.y += 0.6);
+      drone.userData.rotors.forEach((r, i) => r.rotation.y += (i % 2 ? -0.7 : 0.7));
+      drone.userData.led.material.emissiveIntensity = 0.6 + 0.9 * (Math.sin(t * 6) > 0.6 ? 1 : 0);
 
       renderer.render(scene, camera);
       rafId = requestAnimationFrame(animate);
@@ -1899,85 +1946,179 @@
       renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // Dark mode: rainbow MeshNormalMaterial (current Bruno look).
-      // Light mode: solid Lambert with lights — needed because the rainbow normal-mapping
-      // washes out against the cream background and the drone/robot become invisible.
-      // Dark theme: both wear the rainbow MeshNormalMaterial.
-      // Light theme: solid rust drone + gold car (emissive keeps them off-muddy).
-      const matRainbow = new THREE.MeshNormalMaterial({ flatShading: true });
-      const matDrone   = new THREE.MeshLambertMaterial({ color: 0xC0532A, emissive: 0x2a120a, flatShading: true }); // rust
-      const matCar     = new THREE.MeshLambertMaterial({ color: 0xC8902C, emissive: 0x241a06, flatShading: true }); // gold
-      const mat = matRainbow; // build-time placeholder; syncTheme assigns the real material
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-      // Lights drive the Lambert materials. Generous ambient so the yellow stays bright
-      // (not muddy brown) on the shadowed side, in both themes.
-      const dir = new THREE.DirectionalLight(0xffffff, 0.7);
-      dir.position.set(3, 5, 4);
-      scene.add(dir);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      // ── MATERIALS ── lit, palette-matched (rust / gold / charcoal) with emissive accents.
+      // One set of materials; syncTheme() retints them per theme.
+      const M = (o) => new THREE.MeshStandardMaterial({ flatShading: true, roughness: 0.55, metalness: 0.15, ...o });
+      const mat = {
+        body:   M({ color: 0xD4692A }),                       // rust shell
+        accent: M({ color: 0xC8A060, metalness: 0.35 }),       // gold trim
+        dark:   M({ color: 0x2A2621, roughness: 0.8 }),        // tyres, arms
+        metal:  M({ color: 0x8C8A86, metalness: 0.7, roughness: 0.35 }),
+        glass:  M({ color: 0x1B2530, metalness: 0.4, roughness: 0.15 }),
+        glow:   M({ color: 0xFFC27A, emissive: 0xFF9A3C, emissiveIntensity: 1.2 }),
+        tail:   M({ color: 0xFF4A3C, emissive: 0xE0281C, emissiveIntensity: 1.0 }),
+        led:    M({ color: 0x7CF2A0, emissive: 0x34D27A, emissiveIntensity: 1.4 }),
+        blade:  M({ color: 0xE8E2D8, transparent: true, opacity: 0.55, roughness: 0.4 }),
+      };
+      const box = (w, h, d, m) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+      const cyl = (rt, rb, h, seg, m) => new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), m);
 
-      // ── DRONE ── body + crossed arms + 4 spinning rotors
+      // Key + rim + sky/ground fill so every face reads with a different tone (no flat silhouettes)
+      const key = new THREE.DirectionalLight(0xFFF1E0, 1.6);
+      key.position.set(4, 6, 5);
+      const rim = new THREE.DirectionalLight(0xFFB070, 0.9);
+      rim.position.set(-5, 2, -4);
+      const hemi = new THREE.HemisphereLight(0xFFF6EC, 0x3A2A1E, 0.9);
+      scene.add(key, rim, hemi);
+
+      // Three-quarter view: the camera is orthographic and dead-on, so tilt each model toward it
+      const TILT = 0.38;
+
+      // ── DRONE ── quadcopter: body shell, X-arms, motor pods, 2-blade props, skids, camera gimbal
       drone = new THREE.Group();
-      drone.add(new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.14, 0.4), mat));
-      drone.add(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.05, 0.08), mat));
-      drone.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 1.1), mat));
+      const frame = new THREE.Group();
+      frame.rotation.x = TILT + 0.12;
+      frame.rotation.y = Math.PI / 4;           // X-configuration toward the viewer
+      drone.add(frame);
+
+      const shell = box(0.46, 0.14, 0.62, mat.body);
+      const canopy = box(0.32, 0.1, 0.4, mat.accent);
+      canopy.position.y = 0.11;
+      const battery = box(0.22, 0.06, 0.34, mat.dark);
+      battery.position.y = 0.19;
+      const led = box(0.1, 0.04, 0.04, mat.led);
+      led.position.set(0, 0.04, 0.32);
+      frame.add(shell, canopy, battery, led);
+
       const rotors = [];
-      [[0.5, 0.07, 0], [-0.5, 0.07, 0], [0, 0.07, 0.5], [0, 0.07, -0.5]].forEach(([x, y, z]) => {
-        const r = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.025, 16), mat);
-        r.position.set(x, y, z);
-        drone.add(r);
-        rotors.push(r);
+      [[1, 1], [-1, 1], [1, -1], [-1, -1]].forEach(([sx, sz]) => {
+        const ax = sx * 0.52, az = sz * 0.52;
+        const arm = box(0.07, 0.05, 0.78, mat.dark);
+        arm.position.set(ax / 2, 0, az / 2);
+        arm.rotation.y = Math.atan2(ax, az);
+        const motor = cyl(0.075, 0.09, 0.12, 12, mat.metal);
+        motor.position.set(ax, 0.05, az);
+        const prop = new THREE.Group();
+        prop.position.set(ax, 0.13, az);
+        const b1 = box(0.56, 0.012, 0.07, mat.blade);
+        const b2 = box(0.07, 0.012, 0.56, mat.blade);
+        const cap = cyl(0.035, 0.035, 0.04, 8, mat.accent);
+        prop.add(b1, b2, cap);
+        frame.add(arm, motor, prop);
+        rotors.push(prop);
       });
+      // Landing skids
+      [-0.17, 0.17].forEach(x => {
+        const leg = box(0.03, 0.16, 0.03, mat.dark);
+        leg.position.set(x, -0.14, 0);
+        const skid = box(0.035, 0.03, 0.5, mat.dark);
+        skid.position.set(x, -0.22, 0);
+        frame.add(leg, skid);
+      });
+      // Camera gimbal under the nose
+      const gimbal = box(0.12, 0.1, 0.1, mat.metal);
+      gimbal.position.set(0, -0.11, 0.24);
+      const lens = cyl(0.04, 0.04, 0.04, 12, mat.glass);
+      lens.rotation.x = Math.PI / 2;
+      lens.position.set(0, -0.11, 0.3);
+      frame.add(gimbal, lens);
+
       drone.userData.rotors = rotors;
-      drone.scale.setScalar(0.85);
+      drone.userData.led = led;
+      drone.scale.setScalar(1.05);
       scene.add(drone);
 
-      // ── ROBOT ── autonomous rover / self-driving car, built facing +Z (travel dir)
-      // Fixed gold (matCar) in both themes so it stays distinct from the drone.
+      // ── ROBOT ── autonomous rover, built facing +Z (travel dir).
+      // Outer group: position/scale/tilt. Inner `yaw` group: turns to face travel direction.
       robot = new THREE.Group();
-      // Lower chassis (length runs along Z = the travel axis)
-      robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.3, 1.6), matCar));
-      // Upper cabin, set back slightly
-      const cabin = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.3, 0.9), matCar);
-      cabin.position.set(0, 0.28, -0.05);
-      robot.add(cabin);
-      // Windshield strip (front of cabin) + front sensor bar
-      const windshield = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.22, 0.06), matCar);
-      windshield.position.set(0, 0.3, 0.39);
-      const sensorBar = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.1, 0.05), matCar);
-      sensorBar.position.set(0, 0.04, 0.83);
-      robot.add(windshield, sensorBar);
-      // Spinning roof LIDAR puck — the self-driving-car signature
-      const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.14, 16), matCar);
-      lidar.position.set(0, 0.53, -0.05);
-      robot.add(lidar);
+      robot.rotation.x = TILT;
+      const yaw = new THREE.Group();
+      robot.add(yaw);
 
-      // Four wheels — each in a spin group so rotation.x rolls it; axle laid along X
+      const chassis = box(0.76, 0.26, 1.6, mat.body);
+      const skirt = box(0.8, 0.08, 1.5, mat.dark);
+      skirt.position.y = -0.15;
+      const cabin = box(0.64, 0.28, 0.86, mat.body);
+      cabin.position.set(0, 0.27, -0.08);
+      const roof = box(0.6, 0.04, 0.8, mat.accent);
+      roof.position.set(0, 0.43, -0.08);
+      const windshield = box(0.58, 0.22, 0.05, mat.glass);
+      windshield.position.set(0, 0.28, 0.36);
+      windshield.rotation.x = -0.35;
+      const sideWin = box(0.66, 0.16, 0.6, mat.glass);
+      sideWin.position.set(0, 0.29, -0.08);
+      const rearWin = box(0.52, 0.18, 0.05, mat.glass);
+      rearWin.position.set(0, 0.28, -0.52);
+      yaw.add(chassis, skirt, cabin, sideWin, roof, windshield, rearWin);
+
+      // Front: sensor bar + headlights; rear: tail lights
+      const sensorBar = box(0.6, 0.07, 0.05, mat.dark);
+      sensorBar.position.set(0, 0.02, 0.81);
+      yaw.add(sensorBar);
+      [-0.28, 0.28].forEach(x => {
+        const hl = box(0.14, 0.07, 0.04, mat.glow);
+        hl.position.set(x, 0.08, 0.81);
+        const tl = box(0.14, 0.06, 0.04, mat.tail);
+        tl.position.set(x, 0.08, -0.81);
+        yaw.add(hl, tl);
+      });
+
+      // Roof LIDAR: base + spinning head + emissive scan band
+      const lidarBase = cyl(0.12, 0.14, 0.06, 16, mat.dark);
+      lidarBase.position.set(0, 0.48, -0.08);
+      const lidar = new THREE.Group();
+      lidar.position.set(0, 0.57, -0.08);
+      const lidarHead = cyl(0.12, 0.12, 0.12, 16, mat.metal);
+      const band = cyl(0.125, 0.125, 0.03, 16, mat.led);
+      const notch = box(0.05, 0.06, 0.04, mat.glow);   // makes the spin visible
+      notch.position.set(0, 0, 0.12);
+      lidar.add(lidarHead, band, notch);
+      // Antenna
+      const antenna = cyl(0.01, 0.01, 0.34, 6, mat.dark);
+      antenna.position.set(0.24, 0.6, -0.42);
+      const tip = box(0.035, 0.035, 0.035, mat.tail);
+      tip.position.set(0.24, 0.78, -0.42);
+      yaw.add(lidarBase, lidar, antenna, tip);
+
+      // Four wheels — tyre + gold rim + spokes so the roll reads; axle along X
       const wheels = [];
-      [[-0.41, 0.55], [0.41, 0.55], [-0.41, -0.55], [0.41, -0.55]].forEach(([x, z]) => {
+      [[-0.42, 0.55], [0.42, 0.55], [-0.42, -0.55], [0.42, -0.55]].forEach(([x, z]) => {
         const spin = new THREE.Group();
         spin.position.set(x, -0.18, z);
-        const tyre = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.16, 18), matCar);
+        const tyre = cyl(0.26, 0.26, 0.18, 20, mat.dark);
         tyre.rotation.z = Math.PI / 2;
-        const hub  = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.17, 12), matCar);
-        hub.rotation.z = Math.PI / 2;
-        spin.add(tyre, hub);
-        robot.add(spin);
+        const rimM = cyl(0.15, 0.15, 0.19, 14, mat.accent);
+        rimM.rotation.z = Math.PI / 2;
+        const spoke1 = box(0.2, 0.3, 0.05, mat.metal);
+        const spoke2 = box(0.2, 0.05, 0.3, mat.metal);
+        spin.add(tyre, rimM, spoke1, spoke2);
+        yaw.add(spin);
         wheels.push(spin);
       });
       robot.userData.wheels = wheels;
       robot.userData.lidar = lidar;
+      robot.userData.yaw = yaw;
+      // Lowest point after tilt: wheel bottom (0.44) plus the near wheels dropping by half-track·sin(tilt)
+      robot.userData.groundOffset = 0.44 * Math.cos(TILT) + 0.42 * Math.sin(TILT);
       // Smaller on portrait phones so it doesn't dominate the screen
       robot.scale.setScalar(aspect < 0.75 ? 0.5 : 0.62);
       // Start walking from the left edge
       walk.x = -FRUSTUM_H * aspect / 2 * 0.88;
       scene.add(robot);
 
-      // Dark theme → rainbow for both; light theme → rust drone + gold car.
+      // Retint per theme: brighter rust/gold on dark, deeper tones on the cream background
+      const THEMES = {
+        dark:  { body: 0xD4692A, accent: 0xC8A060, dark: 0x5A5047, hemi: 0.9 },
+        light: { body: 0xB8521E, accent: 0x9A7A36, dark: 0x2B2621, hemi: 1.1 },
+      };
       function syncTheme() {
-        const isLight = document.documentElement.dataset.theme === 'light';
-        drone.traverse(o => { if (o.isMesh) o.material = isLight ? matDrone : matRainbow; });
-        robot.traverse(o => { if (o.isMesh) o.material = isLight ? matCar   : matRainbow; });
+        const c = THEMES[document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'];
+        mat.body.color.setHex(c.body);
+        mat.accent.color.setHex(c.accent);
+        mat.dark.color.setHex(c.dark);
+        hemi.intensity = c.hemi;
       }
       syncTheme();
       new MutationObserver(syncTheme).observe(document.documentElement, {

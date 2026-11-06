@@ -1,6 +1,6 @@
 # ashokg.dev
 
-Personal portfolio site for Ashok Gudivada — Full Stack Engineer (AI/ML) at Verizon.
+Personal portfolio site for Ashok Gudivada — Senior Software Engineer at PenFed Credit Union (previously Verizon).
 
 **Live:** [ashokg.dev](https://ashokg.dev)
 
