@@ -498,13 +498,13 @@
       font-family: 'JetBrains Mono', monospace; font-size: .55rem;
       letter-spacing: .06em; color: var(--low); white-space: nowrap;
     }
-    .sig-label .sig-note { color: var(--low); opacity: .85; padding-left: 10px; border-left: 1px solid currentColor; }
+    .sig-label .sig-note { color: var(--low); }
     @media (max-width: 768px) {
       .sig-device { flex: 0 0 56px; }
       .sig-device span { display: none; }
       .sig-device svg { width: 30px; height: 30px; }
       .sig-label { gap: 8px; }
-      .sig-label .sig-note { display: none; }
+      .sig-cap .cap-long { display: none; }
       .sig-label span { font-size: .48rem; letter-spacing: .03em; }
     }
     /* ── 3D SHAPES STRIP (Three.js, Bruno-Simon-style) ── */
@@ -890,13 +890,9 @@
     <span>Device</span>
   </div>
   <!-- Caption + wave legend: 5G spectrum bands, low → high frequency -->
-  <p class="sig-cap">5G spectrum · the RF network I helped plan at Verizon, 2017–2026</p>
+  <p class="sig-cap">5G coverage vs. capacity<span class="cap-long"> · the tradeoff my RF planning tools helped Verizon engineers balance, 2017–2026</span></p>
   <div class="sig-label">
-    <span style="color:var(--rust)">── Low-band</span>
-    <span style="color:rgba(212,105,42,.65)">── Mid-band</span>
-    <span style="color:var(--gold)">── C-band</span>
-    <span style="color:rgba(140,108,52,.9)">── mmWave</span>
-    <span class="sig-note">higher frequency · more capacity · shorter reach</span>
+    <span class="sig-note">↓ higher frequency · more capacity · shorter reach</span>
   </div>
 </div>
 
@@ -1573,95 +1569,71 @@
     const ctx = cvs.getContext('2d');
     let W, H, t = 0, running = false, rafId = 0;
 
-    // Wave definitions: { freq (cycles visible), amp (px), speed, color, alpha, width }
+    // One lane per 5G band, low → high frequency. reach = share of the path the band covers.
     const WAVES = [
-      { freq: 2.2,  amp: 28, speed: 0.038, color: [212,105, 42], alpha: 0.90, lw: 2.2, label:'Low-band', reach: 1.00 },
-      { freq: 3.6,  amp: 20, speed: 0.052, color: [212,105, 42], alpha: 0.55, lw: 1.6, label:'Mid-band', reach: 0.82 },
-      { freq: 5.4,  amp: 14, speed: 0.071, color: [168,134, 74], alpha: 0.75, lw: 1.4, label:'C-band',   reach: 0.62 },
-      { freq: 8.8,  amp:  9, speed: 0.095, color: [168,134, 74], alpha: 0.40, lw: 1.0, label:'mmWave',   reach: 0.30 },
+      { label: 'Low-band', freq: 7,  amp: 7, speed: 0.05, color: [212,105, 42], lw: 2.0, reach: 1.00 },
+      { label: 'Mid-band', freq: 11, amp: 6, speed: 0.07, color: [224,140, 80], lw: 1.7, reach: 0.72 },
+      { label: 'C-band',   freq: 16, amp: 5, speed: 0.09, color: [168,134, 74], lw: 1.5, reach: 0.50 },
+      { label: 'mmWave',   freq: 26, amp: 4, speed: 0.12, color: [120, 96, 52], dark: [206,182,128], lw: 1.3, reach: 0.24 },
     ];
-
-    // Signal envelope along the path: higher bands lose strength faster and die out before the device.
-    function env(w, xr) {
-      const fadeIn = Math.min(xr / 0.08, 1);
-      if (w.reach >= 1) return fadeIn * Math.min((1 - xr) / 0.08, 1);
-      const d = xr / w.reach;                       // 0 at the cell site, 1 at the edge of coverage
-      return d >= 1 ? 0 : fadeIn * Math.pow(1 - d, 0.7);
-    }
-
-    // Stroke colour for a band: full strength at the cell site, fading to nothing where coverage ends.
-    function bandStroke(w, a) {
-      const rgb = `${w.color[0]},${w.color[1]},${w.color[2]}`;
-      if (w.reach >= 1) return `rgba(${rgb},${a})`;
-      const g = ctx.createLinearGradient(0, 0, W * w.reach, 0);
-      g.addColorStop(0, `rgba(${rgb},${a})`);
-      g.addColorStop(0.55, `rgba(${rgb},${a * 0.75})`);
-      g.addColorStop(1, `rgba(${rgb},0)`);
-      return g;
-    }
+    const GUTTER = 64;          // left space for lane labels
+    const TOP = 34, BOTTOM = 102; // lane area between the caption and the note
 
     function resize() {
-      W = cvs.width  = cvs.offsetWidth;
-      H = cvs.height = cvs.offsetHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cvs.offsetWidth; H = cvs.offsetHeight;
+      cvs.width = W * dpr; cvs.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function drawWave(w, phase) {
-      const cy = H / 2;
-      ctx.beginPath();
-      ctx.strokeStyle = bandStroke(w, w.alpha);
-      ctx.lineWidth   = w.lw;
-      ctx.lineCap     = 'round';
+    const laneY = i => TOP + (BOTTOM - TOP) * (i / (WAVES.length - 1));
+    const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
-      // Fade in from left edge, fade out near right edge
-      for (let x = 0; x <= W; x += 1.5) {
-        const xr = x / W;
-        const e = env(w, xr);
-        if (w.reach < 1 && xr > w.reach + 0.01) break;
-        const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
-        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    function drawLane(w, i) {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      w = { ...w, color: (!isLight && w.dark) ? w.dark : w.color };
+      const cy = laneY(i), x0 = GUTTER, span = W - GUTTER - 6, xEnd = x0 + span * w.reach;
+      const phase = t * w.speed;
+
+      // label
+      ctx.font = '600 9px "JetBrains Mono", monospace';
+      ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.fillStyle = rgba(w.color, 1);
+      ctx.fillText(w.label, 4, cy);
+
+      // faint full-length track so the gap to the device is visible
+      ctx.beginPath(); ctx.setLineDash([2, 6]);
+      ctx.strokeStyle = rgba(w.color, 0.22); ctx.lineWidth = 1;
+      ctx.moveTo(x0, cy); ctx.lineTo(W, cy); ctx.stroke(); ctx.setLineDash([]);
+
+      // wave: strong at the cell site, attenuating to nothing at the edge of coverage
+      const g = ctx.createLinearGradient(x0, 0, xEnd, 0);
+      g.addColorStop(0, rgba(w.color, 0.95));
+      g.addColorStop(w.reach >= 1 ? 1 : 0.7, rgba(w.color, w.reach >= 1 ? 0.95 : 0.6));
+      if (w.reach < 1) g.addColorStop(1, rgba(w.color, 0));
+      ctx.beginPath(); ctx.strokeStyle = g; ctx.lineWidth = w.lw; ctx.lineCap = 'round';
+      const cycles = w.freq * w.reach;
+      for (let x = x0; x <= xEnd; x += 1) {
+        const r = (x - x0) / (xEnd - x0 || 1);
+        const a = w.reach >= 1 ? 1 : 1 - 0.6 * r;     // amplitude drops with distance
+        const y = cy + w.amp * a * Math.sin(2 * Math.PI * cycles * r - phase);
+        x === x0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
-    }
 
-    // Soft glow pass — two wide semi-transparent strokes layered under the crisp line
-    function drawWaveGlow(w, phase) {
-      const cy = H / 2;
-      [w.lw * 5, w.lw * 2.5].forEach((lw, i) => {
-        ctx.beginPath();
-        ctx.strokeStyle = bandStroke(w, i === 0 ? 0.06 : 0.14);
-        ctx.lineWidth = lw;
-        ctx.lineCap = 'round';
-        for (let x = 0; x <= W; x += 3) {
-          const xr = x / W;
-          const e = env(w, xr);
-          if (w.reach < 1 && xr > w.reach + 0.01) break;
-          const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
-          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-      });
-    }
+      // end of coverage tick, or the device "receiving" for the band that gets there
+      if (w.reach < 1) {
+        ctx.beginPath(); ctx.strokeStyle = rgba(w.color, 0.45); ctx.lineWidth = 1;
+        ctx.moveTo(xEnd, cy - 5); ctx.lineTo(xEnd, cy + 5); ctx.stroke();
+      }
 
-    // Animated scan-line: bright dot traveling along each wave
-    function drawScanDot(w, phase) {
-      // position: x sweeps 0→W continuously
-      const speed = w.speed * 18; // pixels per frame equivalent
-      const xr = ((t * speed * 0.012) % 1.05) - 0.025;
-      if (xr < 0 || xr > Math.min(1, w.reach)) return;
-      const x = xr * W;
-      const cy = H / 2;
-      const e = env(w, xr);
-      if (w.reach < 1 && e < 0.04) return;
-      const y = cy + w.amp * e * Math.sin(2 * Math.PI * w.freq * xr - phase);
-
-      const grd = ctx.createRadialGradient(x, y, 0, x, y, 6);
-      grd.addColorStop(0, `rgba(${w.color[0]},${w.color[1]},${w.color[2]},0.9)`);
-      grd.addColorStop(1, `rgba(${w.color[0]},${w.color[1]},${w.color[2]},0)`);
-      ctx.beginPath(); ctx.fillStyle = grd;
-      ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(255,255,255,0.85)`;
-      ctx.arc(x, y, 1.4, 0, Math.PI*2); ctx.fill();
+      // pulse travelling out from the cell site
+      const p = ((t * 0.004 + i * 0.23) % 1);
+      const px = x0 + (xEnd - x0) * p;
+      const fade = w.reach >= 1 ? 1 : 1 - p;
+      const grd = ctx.createRadialGradient(px, cy, 0, px, cy, 5);
+      grd.addColorStop(0, rgba(w.color, 0.9 * fade)); grd.addColorStop(1, rgba(w.color, 0));
+      ctx.beginPath(); ctx.fillStyle = grd; ctx.arc(px, cy, 5, 0, Math.PI * 2); ctx.fill();
     }
 
     function animate() {
@@ -1669,22 +1641,7 @@
       rafId = requestAnimationFrame(animate);
       t++;
       ctx.clearRect(0, 0, W, H);
-
-      // Center line (ghost baseline)
-      ctx.beginPath();
-      ctx.strokeStyle = `rgba(80,72,64,0.25)`;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 8]);
-      ctx.moveTo(0, H/2); ctx.lineTo(W, H/2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      WAVES.forEach(w => {
-        const phase = t * w.speed;
-        drawWaveGlow(w, phase);
-        drawWave(w, phase);
-        drawScanDot(w, phase);
-      });
+      WAVES.forEach(drawLane);
     }
 
     function start() { if (running) return; resize(); running = true; rafId = requestAnimationFrame(animate); }
