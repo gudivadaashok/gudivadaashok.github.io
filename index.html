@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Ashok Gudivada — Senior Software Engineer at PenFed Credit Union, previously Verizon. 10 years building production systems: 5G network tooling, AI/ML-driven automation, geospatial pipelines." />
-  <meta property="og:title" content="Ashok Gudivada — Full Stack Engineer" />
+  <meta property="og:title" content="Ashok Gudivada — Senior Software Engineer · Full-Stack, AI/ML, Platforms" />
   <meta property="og:description" content="10 years building full-stack systems in production. 5G network tooling, AI/ML automation, geospatial pipelines. Now at PenFed Credit Union." />
   <meta property="og:url" content="https://ashokg.dev" />
   <meta property="og:type" content="website" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Ashok Gudivada" />
   <meta name="theme-color" content="#100E0B" />
-  <title>Ashok Gudivada — Full Stack Engineer</title>
+  <title>Ashok Gudivada — Senior Software Engineer · Full-Stack, AI/ML, Platforms</title>
   <!-- Favicon: theme-aware AG monogram in rust (#D4692A) — href swapped by applyTheme -->
   <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23100E0B'/%3E%3Ctext x='16' y='23' font-family='Inter%2Csystem-ui%2Csans-serif' font-size='17' font-weight='800' fill='%23D4692A' text-anchor='middle'%3EAG%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -141,7 +141,7 @@
     }
 
     /* ── LAYOUT ── */
-    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 64px; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 64px; position: relative; z-index: 1; }
     .mob-controls { display: none; gap: 8px; align-items: center; }
 
     /* ══ HERO ══ */
@@ -484,6 +484,12 @@
     #sigCvs {
       flex: 1 1 0; min-width: 0; height: 130px; display: block;
     }
+    .sig-cap {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      margin: 0; pointer-events: none; z-index: 3; white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace; font-size: .58rem;
+      letter-spacing: .06em; color: var(--mid);
+    }
     .sig-label {
       position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
       display: flex; gap: 14px; pointer-events: none; z-index: 3;
@@ -505,14 +511,14 @@
       position: fixed; inset: 0; width: 100vw;
       height: 100vh;          /* fallback for browsers without dvh */
       height: 100dvh;         /* iOS Safari: matches visible viewport so floor lines up with the footer */
-      pointer-events: none; z-index: 5; opacity: .9;
+      pointer-events: none; z-index: 0; opacity: .9;
     }
     [data-theme="light"] #shapesCvs { opacity: .95; }
 
     @media (max-width: 480px) {
       .sig-device { flex: 0 0 44px; }
       .sig-device svg { width: 26px; height: 26px; }
-      .sig-label { display: none; }
+      .sig-label, .sig-cap { display: none; }
     }
 
     /* ── FOOTER ── */
@@ -620,6 +626,7 @@
     <li><a href="#skills"     data-section="skills">Skills</a></li>
     <li><a href="#experience" data-section="experience">Experience</a></li>
     <li><a href="#projects"   data-section="projects">Projects</a></li>
+    <li><a href="#research"   data-section="research">Research</a></li>
     <li><a href="#contact"    data-section="contact">Contact</a></li>
     <li>
       <button class="theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light / dark">
@@ -660,24 +667,20 @@
 <!-- Ticker -->
 <div class="ticker-wrap" aria-hidden="true">
   <div class="ticker-track">
-    <span>Currently building</span><span class="sep">·</span>
-    <span>Autonomous robotics on a self-hosted K3s cluster</span><span class="sep">·</span>
-    <span>ROS · real-time perception · embedded</span><span class="sep">·</span>
-    <span>CLIP drone detection @ 0.733 IoU</span><span class="sep">·</span>
-    <span>Self-Healing Network agents in production</span><span class="sep">·</span>
-    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
     <span>Open to Senior / Staff Eng roles</span><span class="sep">·</span>
+    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
+    <span>SON self-healing agents in production</span><span class="sep">·</span>
+    <span>CLIP drone imagery pipeline @ 0.733 IoU</span><span class="sep">·</span>
     <span>AWS Certified · Azure Certified</span><span class="sep">·</span>
+    <span>Homelab: K3s on Proxmox · ROS</span><span class="sep">·</span>
     <span>hello@ashokg.dev</span><span class="sep">·</span>
     <!-- duplicate for seamless loop -->
-    <span>Currently building</span><span class="sep">·</span>
-    <span>Autonomous robotics on a self-hosted K3s cluster</span><span class="sep">·</span>
-    <span>ROS · real-time perception · embedded</span><span class="sep">·</span>
-    <span>CLIP drone detection @ 0.733 IoU</span><span class="sep">·</span>
-    <span>Self-Healing Network agents in production</span><span class="sep">·</span>
-    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
     <span>Open to Senior / Staff Eng roles</span><span class="sep">·</span>
+    <span>200+ Airflow DAGs · multi-TB PostGIS twin</span><span class="sep">·</span>
+    <span>SON self-healing agents in production</span><span class="sep">·</span>
+    <span>CLIP drone imagery pipeline @ 0.733 IoU</span><span class="sep">·</span>
     <span>AWS Certified · Azure Certified</span><span class="sep">·</span>
+    <span>Homelab: K3s on Proxmox · ROS</span><span class="sep">·</span>
     <span>hello@ashokg.dev</span><span class="sep">·</span>
   </div>
 </div>
@@ -688,6 +691,7 @@
   <a href="#skills"     onclick="closeMenu()" data-section="skills">Skills</a>
   <a href="#experience" onclick="closeMenu()" data-section="experience">Experience</a>
   <a href="#projects"   onclick="closeMenu()" data-section="projects">Projects</a>
+  <a href="#research"   onclick="closeMenu()" data-section="research">Research</a>
   <a href="#contact"    onclick="closeMenu()" class="panel-cta" data-section="contact">Contact →</a>
 </div>
 
@@ -708,13 +712,13 @@
       <h1 class="hero-name h-anim" style="--d:.18s">Ashok<br><span class="accent">Gudivada.</span></h1>
 
       <!-- Typewriter title -->
-      <p class="hero-title h-anim" style="--d:.32s">Senior Full-Stack Engineer · AI/ML · Geospatial Systems</p>
+      <p class="hero-title h-anim" style="--d:.32s">Senior Software Engineer · Full-Stack · AI/ML · Backend Platforms</p>
 
       <p class="hero-bio h-anim" style="--d:.44s">
         10 years shipping production systems end-to-end. Now a Senior Software Engineer at
         <strong>PenFed Credit Union</strong>. Before that, I built the tooling behind <strong>Verizon's 5G network planning</strong>:
         RF dashboards, geospatial pipelines, and <strong>AI/ML-driven automation</strong> used daily by 500+ engineers.
-        Outside work, I run a self-hosted K3s cluster on Proxmox and build autonomous robotics systems for fun.
+        Outside work, I run a self-hosted K3s homelab and keep learning robotics as a part-time research volunteer at GMU.
       </p>
       <div class="hero-actions h-anim" style="--d:.56s">
         <a href="#contact" class="btn btn-fill">Get in touch →</a>
@@ -724,7 +728,7 @@
       <div class="stats h-anim" style="--d:.68s">
         <div class="stat"><div class="stat-n" data-count="10" data-suffix="+">10+</div><div class="stat-l">Years in prod</div></div>
         <div class="stat"><div class="stat-n" data-count="40" data-suffix="+">40+</div><div class="stat-l">Microservices owned</div></div>
-        <div class="stat"><div class="stat-n" data-count="13" data-suffix="k+">13k+</div><div class="stat-l">Hours ROI / year</div></div>
+        <div class="stat"><div class="stat-n" data-count="13" data-suffix="k+">13k+</div><div class="stat-l">Eng-hours saved / year</div></div>
         <div class="stat"><div class="stat-n" data-count="100" data-suffix="M+">100M+</div><div class="stat-l">5G users</div></div>
       </div>
     </div>
@@ -738,7 +742,7 @@
     <h2 class="sec-t reveal" style="--d:.08s">Background</h2>
     <div class="about-grid">
       <div class="about-copy reveal" style="--d:.14s">
-        <p>10 years shipping production systems end-to-end. I'm now a Senior Software Engineer at <strong>PenFed Credit Union</strong> in McLean, VA. Before that, at Verizon (2017–2026), I led a team of 10+ engineers building and owning 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards that powered <strong>RF planning and capacity decisions</strong> across the US 5G network, used daily by 500+ engineers.</p>
+        <p>10 years shipping production systems end-to-end. I'm now a Senior Software Engineer at <strong>PenFed Credit Union</strong> in McLean, VA, working on loan origination. Before that, at Verizon (2017–2026), I built and owned 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards that powered <strong>RF planning and capacity decisions</strong> across the US 5G network, used daily by 500+ engineers, and mentored 10+ engineers along the way.</p>
         <p>On the AI/ML side, I've taken models from <strong>prototype to production</strong>: anomaly-detection agents, Prophet/LSTM capacity-planning models, and a CLIP-based drone vision system, all running on real infrastructure, used by real teams.</p>
         <p>Outside work, <strong>I build robots</strong>. ROS pipelines, embedded hardware, real-time perception systems, hardware-in-the-loop testing, all running on a self-hosted 5-node K3s cluster I put together for exactly this kind of tinkering, plus a growing pile of components I'm either fixing or breaking.</p>
 
@@ -746,24 +750,26 @@
         <div class="certs">
           <div class="cert-badge">
             <div class="cert-info">
-              <div class="cert-name">Solutions Architect</div>
-              <div class="cert-meta">AWS · Associate · 2024</div>
+              <div class="cert-name">AWS Certified Solutions Architect</div>
+              <div class="cert-meta">Associate · 2024</div>
             </div>
           </div>
           <div class="cert-badge">
             <div class="cert-info">
-              <div class="cert-name">Developer Associate</div>
-              <div class="cert-meta">Microsoft Azure · 2022</div>
+              <div class="cert-name">Azure Developer Associate</div>
+              <div class="cert-meta">Microsoft · AZ-204 · 2022</div>
             </div>
           </div>
         </div>
       </div>
       <ul class="facts reveal" style="--d:.22s">
-        <li><span class="fk">Location</span><span class="fv">Reston, VA</span></li>
+        <li><span class="fk">Location</span><span class="fv">Northern Virginia</span></li>
         <li><span class="fk">Open to</span><span class="fv">SF Bay · NYC · Seattle · Austin · Boston · DMV · + major US hubs</span></li>
         <li><span class="fk">Current role</span><span class="fv">Sr. Software Engineer, PenFed Credit Union</span></li>
         <li><span class="fk">Previous</span><span class="fv">Verizon, 2017–2026</span></li>
         <li><span class="fk">Earlier</span><span class="fv">Microland, India 2014–15</span></li>
+        <li><span class="fk">Education</span><span class="fv">MS Computer Science, Oklahoma City University, 2017</span></li>
+        <li><span class="fk">Studying</span><span class="fv">MS Electrical Engineering (Robotics &amp; Control), GMU · part-time</span></li>
         <li><span class="fk">Interests</span><span class="fv">Electronics · Robotics · IoT</span></li>
         <li><span class="fk">Looking for</span><span class="fv">Senior / Staff Eng roles</span></li>
         <li><span class="fk">Status</span><span class="fv" style="color:var(--rust)">● Available</span></li>
@@ -826,9 +832,8 @@
           <span class="pill">PostGIS</span>
           <span class="pill">Mapbox GL</span>
           <span class="pill">GeoServer</span>
-          <span class="pill">Forsk Atoll 3.6.0</span>
+          <span class="pill">Forsk Atoll</span>
           <span class="pill">5G NR (NSA/SA)</span>
-          <span class="pill">LiDAR</span>
           <span class="pill">FCC BDC</span>
         </div>
       </div>
@@ -853,8 +858,7 @@
           <span class="pill">CI/CD</span>
           <span class="pill">Agile / Scrum</span>
           <span class="pill">Code review</span>
-          <span class="pill">ML Ops</span>
-          <span class="pill">Terraform</span>
+          <span class="pill">MLOps</span>
         </div>
       </div>
     </div>
@@ -863,31 +867,32 @@
 
 <!-- RF SIGNAL STRIP -->
 <div class="sig-strip" aria-hidden="true">
-  <!-- Left computer -->
+  <!-- Left: 5G cell site (gNB) -->
   <div class="sig-device">
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2"/>
-      <line x1="8" y1="21" x2="16" y2="21"/>
-      <line x1="12" y1="17" x2="12" y2="21"/>
+      <path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/>
+      <circle cx="12" cy="9" r="2"/>
+      <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/>
+      <path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/>
     </svg>
-    <span>Transmit</span>
+    <span>Cell site</span>
   </div>
   <!-- Wave canvas -->
   <canvas id="sigCvs"></canvas>
-  <!-- Right computer -->
+  <!-- Right: user device (UE) -->
   <div class="sig-device">
     <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2"/>
-      <line x1="8" y1="21" x2="16" y2="21"/>
-      <line x1="12" y1="17" x2="12" y2="21"/>
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <path d="M12 18h.01"/>
     </svg>
-    <span>Receive</span>
+    <span>Device</span>
   </div>
-  <!-- Wave legend -->
+  <!-- Caption + wave legend: 5G spectrum bands, low → high frequency -->
+  <p class="sig-cap">5G spectrum · the RF network I helped plan at Verizon, 2017–2026</p>
   <div class="sig-label">
-    <span style="color:var(--rust)">── 5G NR</span>
-    <span style="color:rgba(212,105,42,.65)">── LTE</span>
-    <span style="color:var(--gold)">── Sub-6GHz</span>
+    <span style="color:var(--rust)">── Low-band</span>
+    <span style="color:rgba(212,105,42,.65)">── Mid-band</span>
+    <span style="color:var(--gold)">── C-band</span>
     <span style="color:rgba(168,134,74,.55)">── mmWave</span>
   </div>
 </div>
@@ -906,6 +911,13 @@
         <div>
           <div class="exp-role">Senior Software Engineer</div>
           <div class="exp-co">PenFed Credit Union · McLean, VA</div>
+          <ul class="exp-bul">
+            <li>Build backend services for PenFed's <strong>loan origination</strong> platform.</li>
+            <li>Design and ship APIs and integrations that move loan applications reliably from intake through approval.</li>
+            <li>Drive engineering quality: code reviews, automated testing, and production support for member-facing lending systems.</li>
+            <li>Bring a decade of large-scale systems and AI/ML automation experience to modernize lending workflows.</li>
+          </ul>
+          <div class="exp-stack">Loan Origination · Financial Services</div>
         </div>
       </div>
       <div class="exp-item reveal" style="--d:.12s">
@@ -918,10 +930,11 @@
           <div class="exp-co">Verizon · Reston, VA</div>
           <ul class="exp-bul">
             <li>Owned 40+ Java/Spring Boot and Python microservices and 30+ Angular/React dashboards powering 5G/5G-Advanced network planning, spectrum management, and FCC compliance for 500+ RF engineers.</li>
-            <li>Designed and deployed LLM and ML automation to production: <strong>13,000+ hours of annual operational ROI</strong> across network planning, anomaly detection, and capacity forecasting, supporting 5G rollout to 100M+ users.</li>
-            <li>Architected greenfield data platform from scratch: <strong>200+ Airflow DAGs</strong> orchestrating ingestion of tower telemetry, FCC feeds, OSS capacity data, and greenfield site builds into a multi-TB Oracle/PostGIS geospatial digital twin with Kafka streaming, Spark-on-EMR batch processing, and Elasticsearch for sub-second RF site search.</li>
+            <li>Designed and deployed LLM and ML automation to production: <strong>13,000+ engineer-hours saved annually</strong> across network planning, anomaly detection, and capacity forecasting, supporting 5G rollout to 100M+ users.</li>
+            <li>Architected a greenfield data platform: <strong>200+ Airflow DAGs</strong> ingesting tower telemetry, FCC feeds, OSS capacity data, and new site builds into a multi-TB Oracle/PostGIS geospatial digital twin.</li>
+            <li>Added Kafka streaming, Spark-on-EMR batch processing, and Elasticsearch, delivering sub-second RF site search.</li>
             <li>Built antenna alignment verification pipeline using CLIP-based drone imagery: <strong>0.733 IoU on LEVIR-CD+</strong>, deployed as Dockerized FastAPI with React UI.</li>
-            <li>Production AI anomaly-detection agents for <strong>Self-Healing Network (SON)</strong>: autonomous tower-load mitigation with zero manual intervention.</li>
+            <li>Production AI anomaly-detection agents for <strong>Self-Organizing Network (SON) self-healing</strong>: autonomous tower-load mitigation with zero manual intervention.</li>
             <li>Mentored 10+ engineers with several intern-to-full-time conversions (2024–25); STEM mentor via National Academy Foundation.</li>
           </ul>
           <div class="exp-stack">Java · Spring Boot · React · Angular · Python · FastAPI · PyTorch · AWS · Kafka · Spark · PostGIS · Elasticsearch · Mapbox GL · Oracle · Kubernetes</div>
@@ -959,13 +972,39 @@
         </div>
         <div>
           <div class="exp-role"><a class="proj-link" href="https://ashokg.dev/fpcv-companion/" target="_blank" rel="noopener">Vision Bench<span class="arr">↗&#xFE0E;</span></a></div>
-          <div class="exp-co">Interactive companion to <em>First Principles of Computer Vision</em> (Shree Nayar)</div>
+          <div class="exp-co">Unofficial interactive companion to Shree Nayar's <em>First Principles of Computer Vision</em> lectures</div>
           <ul class="exp-bul">
-            <li>Hands-on, in-browser lab for classic vision algorithms: drop in an image and step through each stage of the pipeline with live canvases, controls, and the math behind it.</li>
-            <li>Binary images module: histogram thresholding with <strong>Otsu auto-threshold</strong>, 4/8-connected <strong>component labeling</strong>, and per-object area, centroid, orientation, and roundedness from second moments.</li>
-            <li>Modules for image processing, edge detection, photometric stereo, and optical flow. All processing runs client-side, so images never leave the device.</li>
+            <li><strong>22 hands-on demos</strong> covering the full lecture series, from image formation to neural networks: load a sample or your own photo, move the sliders, and watch each algorithm work step by step.</li>
+            <li>Spans imaging, features (Canny, Hough, <strong>SIFT</strong>, RANSAC stitching), 3D reconstruction (photometric stereo, stereo, structure from motion), and perception (optical flow, <strong>Kalman tracking</strong>, segmentation, backprop).</li>
+            <li>Everything runs client-side in the browser, so images never leave the device.</li>
           </ul>
           <div class="exp-stack">JavaScript · Canvas API · Image Processing · Computer Vision</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- RESEARCH -->
+<div class="wrap">
+  <section class="section" id="research">
+    <p class="sec-n reveal">05 — Research</p>
+    <h2 class="sec-t reveal" style="--d:.08s">Robotics research</h2>
+    <div>
+      <div class="exp-item reveal" style="--d:.12s">
+        <div>
+          <div class="exp-period">2026 — Present<br><span style="color:var(--low)">Part-time</span></div>
+          <span class="co-tag">GMU</span>
+        </div>
+        <div>
+          <div class="exp-role"><a class="proj-link" href="https://robotixx.cs.gmu.edu" target="_blank" rel="noopener">RobotiXX Lab<span class="arr">↗&#xFE0E;</span></a></div>
+          <div class="exp-co">Research Volunteer · George Mason University · Mason Square, Arlington, VA</div>
+          <ul class="exp-bul">
+            <li>Alongside my full-time role, I volunteer with a GMU robotics lab to keep learning: building depth in <strong>motion planning and robot learning</strong>.</li>
+            <li>Learn by doing across <strong>simulation and hardware</strong>: reproducing methods from current research in simulation, then testing them with <strong>ROS 2</strong> on real robots.</li>
+            <li>Bring the lessons back to industry work: rigorous evaluation, data-driven iteration, and applying ML to real-world systems.</li>
+          </ul>
+          <div class="exp-stack">ROS 2 · Motion Planning · Robot Learning · Field Robotics</div>
         </div>
       </div>
     </div>
@@ -975,7 +1014,7 @@
 <!-- CONTACT -->
 <div class="wrap">
   <section class="section" id="contact">
-    <p class="sec-n reveal">05 — Contact</p>
+    <p class="sec-n reveal">06 — Contact</p>
     <div class="contact-intro reveal" style="--d:.08s">
       <h3 class="c-head">Get in <span class="accent">touch.</span></h3>
       <p class="c-note">Open to Senior and Staff engineering roles. Feel free to reach out about job opportunities, collaborations, or just to talk tech. I usually reply within 24 hours.</p>
@@ -1043,7 +1082,7 @@
     </div>
     <div class="term-hint">type <strong>help</strong> for available commands</div>
     <div class="term-output" id="termOutput">
-      <div class="t-line">Welcome to ashok.dev terminal v1.0</div>
+      <div class="t-line">Welcome to ashokg.dev terminal v1.0</div>
       <div class="t-line" style="color:var(--low)">─────────────────────────────────</div>
     </div>
     <div class="term-input-row">
@@ -1203,6 +1242,7 @@
       '<span class="t-key">whoami</span>       — about Ashok',
       '<span class="t-key">skills</span>       — tech stack',
       '<span class="t-key">experience</span>   — work history',
+      '<span class="t-key">research</span>     — part-time robotics research (GMU)',
       '<span class="t-key">projects</span>     — selected work',
       '<span class="t-key">homelab</span>      — K3s cluster topology',
       '<span class="t-key">drone</span>        — CLIP detection project',
@@ -1212,9 +1252,11 @@
     ],
     whoami: () => [
       '<span class="t-val">Ashok Gudivada</span>',
-      'Senior Full-Stack Engineer · AI/ML · Geospatial Systems',
-      'Based in Reston, VA · 10 years in production',
-      'Robotics tinkerer · ROS · embedded · K3s homelab',
+      'Senior Software Engineer · Full-Stack · AI/ML · Backend Platforms',
+      'Based in Northern Virginia · 10 years in production',
+      'MS Computer Science, Oklahoma City University (2017)',
+      'MS Electrical Engineering (Robotics & Control), GMU · in progress, part-time',
+      'K3s homelab · robotics learner (part-time research volunteer)',
     ],
     skills: () => [
       '<span class="t-key">AI/ML</span>      PyTorch · LangChain · CLIP · Prophet · LSTM · Pinecone',
@@ -1226,6 +1268,7 @@
     ],
     experience: () => [
       '<span class="t-val">PenFed Credit Union</span> · Senior Software Engineer · 2026–Present',
+      '  Loan origination platform',
       '',
       '<span class="t-val">Verizon</span> · Senior Software Engineer · 2017–2026',
       '  40+ Java/Python microservices · 30+ React/Angular dashboards',
@@ -1234,14 +1277,16 @@
       '<span class="t-val">Microland</span> · Software Engineer · 2014–2015',
       '  Java/Spring/Hibernate · AngularJS · MySQL',
     ],
+    research: () => [
+      '<span class="t-val">RobotiXX Lab</span> · GMU Mason Square, Arlington · 2026–Present',
+      '  Research Volunteer (part-time) · motion planning × robot learning',
+      '  robotixx.cs.gmu.edu',
+    ],
     projects: () => [
-      '<span class="t-val">Openclaw</span>        RAG/AX platform · LangChain · Pinecone · React',
       '<span class="t-val">CLIP Drone</span>      Change detection · 0.733 IoU on LEVIR-CD+',
       '<span class="t-val">SON Agents</span>      Anomaly detection · Shipped to Verizon prod',
-      '<span class="t-val">RF Heatmap</span>      Mapbox GL · GeoServer · 10M+ events/day',
       '<span class="t-val">K3s Homelab</span>     5-node Proxmox cluster · OPNsense · Grafana',
-      '<span class="t-val">LLM Diagrams</span>    –214 hrs/capability · –$8,992/unit',
-      '<span class="t-val">Vision Bench</span>    Interactive CV lab · ashokg.dev/fpcv-companion',
+      '<span class="t-val">Vision Bench</span>    22 interactive CV demos · ashokg.dev/fpcv-companion',
     ],
     contact: () => [
       '<span class="t-key">email</span>    hello@ashokg.dev',
@@ -1252,7 +1297,7 @@
     status: () => [
       '<span class="t-val" style="color:#27c93f">● AVAILABLE</span>',
       'Open to Senior / Staff Engineering roles',
-      'Preferred: full-stack · AI/ML · robotics & autonomy',
+      'Preferred: full-stack · AI/ML · backend platforms',
     ],
     clear:      () => { termOutput.innerHTML = ''; return []; },
     homelab:    () => [
@@ -1333,7 +1378,7 @@
     }
 
     // Contact is the last (short) section — at the page bottom an anchor click can't scroll
-    // anywhere, so flash the "05 — Contact" heading to confirm the jump landed.
+    // anywhere, so flash the "06 — Contact" heading to confirm the jump landed.
     const contactSecN = document.querySelector('#contact .sec-n');
     document.querySelectorAll('a[href="#contact"]').forEach(a => {
       a.addEventListener('click', () => {
@@ -1527,9 +1572,9 @@
 
     // Wave definitions: { freq (cycles visible), amp (px), speed, color, alpha, width }
     const WAVES = [
-      { freq: 2.2,  amp: 28, speed: 0.038, color: [212,105, 42], alpha: 0.90, lw: 2.2, label:'5G NR'    },
-      { freq: 3.6,  amp: 20, speed: 0.052, color: [212,105, 42], alpha: 0.55, lw: 1.6, label:'LTE'      },
-      { freq: 5.4,  amp: 14, speed: 0.071, color: [168,134, 74], alpha: 0.75, lw: 1.4, label:'Sub-6GHz' },
+      { freq: 2.2,  amp: 28, speed: 0.038, color: [212,105, 42], alpha: 0.90, lw: 2.2, label:'Low-band' },
+      { freq: 3.6,  amp: 20, speed: 0.052, color: [212,105, 42], alpha: 0.55, lw: 1.6, label:'Mid-band' },
+      { freq: 5.4,  amp: 14, speed: 0.071, color: [168,134, 74], alpha: 0.75, lw: 1.4, label:'C-band'   },
       { freq: 8.8,  amp:  9, speed: 0.095, color: [168,134, 74], alpha: 0.40, lw: 1.0, label:'mmWave'   },
     ];
 
@@ -1917,8 +1962,8 @@
       drone.position.set(nx, ny, 0);
       drone.rotation.z = -(nx - px) * 3.0;   // bank into the chase
       drone.rotation.x =  (ny - py) * 1.5;   // pitch with vertical drift
-      drone.userData.rotors.forEach((r, i) => r.rotation.y += (i % 2 ? -0.7 : 0.7));
-      drone.userData.led.material.emissiveIntensity = 0.6 + 0.9 * (Math.sin(t * 6) > 0.6 ? 1 : 0);
+      drone.userData.rotors.forEach((r, i) => r.rotation.y += (i % 2 ? -0.9 : 0.9));
+      drone.userData.led.material.emissiveIntensity = Math.sin(t * 6) > 0.6 ? 2.0 : 0.4;   // strobe
 
       renderer.render(scene, camera);
       rafId = requestAnimationFrame(animate);
@@ -1976,58 +2021,68 @@
       // Three-quarter view: the camera is orthographic and dead-on, so tilt each model toward it
       const TILT = 0.38;
 
-      // ── DRONE ── quadcopter: body shell, X-arms, motor pods, 2-blade props, skids, camera gimbal
+      // ── DRONE ── sleek quad: smooth aero body, thin carbon arms, ducted props with blur discs,
+      // nav lights and a small camera ball. Smooth shading (not flat) so it reads as a product, not blocks.
+      const S = (o) => new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0.25, ...o });
+      const dmat = {
+        hull:   S({ color: 0x2E2A26, roughness: 0.3, metalness: 0.4 }),   // gunmetal
+        stripe: mat.body,                                                  // rust (theme-tinted)
+        arm:    S({ color: 0x1E1B18, roughness: 0.5 }),
+        duct:   mat.accent,                                                // gold rings
+        blur:   new THREE.MeshBasicMaterial({ color: 0xE8E2D8, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }),
+        blade:  S({ color: 0xD8D2C8, transparent: true, opacity: 0.7 }),
+        green:  S({ color: 0x7CF2A0, emissive: 0x34D27A, emissiveIntensity: 1.4 }),
+        red:    S({ color: 0xFF6A5C, emissive: 0xE0281C, emissiveIntensity: 1.2 }),
+      };
       drone = new THREE.Group();
       const frame = new THREE.Group();
-      frame.rotation.x = TILT + 0.12;
-      frame.rotation.y = Math.PI / 4;           // X-configuration toward the viewer
+      frame.rotation.x = TILT + 0.2;
+      frame.rotation.y = Math.PI / 4;            // X-configuration toward the viewer
       drone.add(frame);
 
-      const shell = box(0.46, 0.14, 0.62, mat.body);
-      const canopy = box(0.32, 0.1, 0.4, mat.accent);
-      canopy.position.y = 0.11;
-      const battery = box(0.22, 0.06, 0.34, mat.dark);
-      battery.position.y = 0.19;
-      const led = box(0.1, 0.04, 0.04, mat.led);
-      led.position.set(0, 0.04, 0.32);
-      frame.add(shell, canopy, battery, led);
+      const sph = (r, m, sx = 1, sy = 1, sz = 1) => {
+        const o = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), m);
+        o.scale.set(sx, sy, sz); return o;
+      };
+      const hull = sph(0.24, dmat.hull, 1, 0.38, 1.45);
+      const stripe = sph(0.2, dmat.stripe, 0.62, 0.36, 1.3);
+      stripe.position.y = 0.035;
+      frame.add(hull, stripe);
 
       const rotors = [];
       [[1, 1], [-1, 1], [1, -1], [-1, -1]].forEach(([sx, sz]) => {
-        const ax = sx * 0.52, az = sz * 0.52;
-        const arm = box(0.07, 0.05, 0.78, mat.dark);
-        arm.position.set(ax / 2, 0, az / 2);
-        arm.rotation.y = Math.atan2(ax, az);
-        const motor = cyl(0.075, 0.09, 0.12, 12, mat.metal);
-        motor.position.set(ax, 0.05, az);
+        const ax = sx * 0.5, az = sz * 0.5;
+        const len = Math.hypot(ax, az);
+        const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.03, len, 8), dmat.arm);
+        arm.rotation.z = Math.PI / 2;
+        const armG = new THREE.Group();
+        armG.rotation.y = Math.atan2(-az, ax);
+        arm.position.x = len / 2;
+        armG.add(arm);
+        const motor = cyl(0.045, 0.05, 0.07, 16, dmat.arm);
+        motor.position.set(ax, 0.03, az);
+        const duct = new THREE.Mesh(new THREE.TorusGeometry(0.21, 0.016, 8, 40), dmat.duct);
+        duct.rotation.x = Math.PI / 2;
+        duct.position.set(ax, 0.07, az);
+        const disc = new THREE.Mesh(new THREE.CircleGeometry(0.2, 32), dmat.blur);
+        disc.rotation.x = -Math.PI / 2;
+        disc.position.set(ax, 0.075, az);
         const prop = new THREE.Group();
-        prop.position.set(ax, 0.13, az);
-        const b1 = box(0.56, 0.012, 0.07, mat.blade);
-        const b2 = box(0.07, 0.012, 0.56, mat.blade);
-        const cap = cyl(0.035, 0.035, 0.04, 8, mat.accent);
-        prop.add(b1, b2, cap);
-        frame.add(arm, motor, prop);
+        prop.position.set(ax, 0.075, az);
+        prop.add(box(0.38, 0.006, 0.035, dmat.blade));
+        frame.add(armG, motor, duct, disc, prop);
         rotors.push(prop);
       });
-      // Landing skids
-      [-0.17, 0.17].forEach(x => {
-        const leg = box(0.03, 0.16, 0.03, mat.dark);
-        leg.position.set(x, -0.14, 0);
-        const skid = box(0.035, 0.03, 0.5, mat.dark);
-        skid.position.set(x, -0.22, 0);
-        frame.add(leg, skid);
-      });
-      // Camera gimbal under the nose
-      const gimbal = box(0.12, 0.1, 0.1, mat.metal);
-      gimbal.position.set(0, -0.11, 0.24);
-      const lens = cyl(0.04, 0.04, 0.04, 12, mat.glass);
-      lens.rotation.x = Math.PI / 2;
-      lens.position.set(0, -0.11, 0.3);
-      frame.add(gimbal, lens);
+      // Nav lights on the front arms (green starboard, red port) + camera ball under the nose
+      const navG = sph(0.03, dmat.green); navG.position.set(0.5, 0.0, 0.5);
+      const navR = sph(0.03, dmat.red);   navR.position.set(-0.5, 0.0, 0.5);
+      const cam = sph(0.065, dmat.arm);   cam.position.set(0, -0.08, 0.26);
+      const lens = sph(0.03, mat.glass);  lens.position.set(0, -0.085, 0.32);
+      frame.add(navG, navR, cam, lens);
 
       drone.userData.rotors = rotors;
-      drone.userData.led = led;
-      drone.scale.setScalar(1.05);
+      drone.userData.led = navG;
+      drone.scale.setScalar(0.8);
       scene.add(drone);
 
       // ── ROBOT ── autonomous rover, built facing +Z (travel dir).
@@ -2110,8 +2165,11 @@
 
       // Retint per theme: brighter rust/gold on dark, deeper tones on the cream background
       const THEMES = {
-        dark:  { body: 0xD4692A, accent: 0xC8A060, dark: 0x5A5047, hemi: 0.9 },
-        light: { body: 0xB8521E, accent: 0x9A7A36, dark: 0x2B2621, hemi: 1.1 },
+        // Drone hull/arms flip with the theme so it always contrasts with the page background
+        dark:  { body: 0xD4692A, accent: 0xC8A060, dark: 0x5A5047, hemi: 0.9,
+                 hull: 0xF2EBDF, arm: 0xC9C0B2, blur: 0.22 },
+        light: { body: 0xB8521E, accent: 0x9A7A36, dark: 0x2B2621, hemi: 1.1,
+                 hull: 0x2E2A26, arm: 0x3A3530, blur: 0.18 },
       };
       function syncTheme() {
         const c = THEMES[document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'];
@@ -2119,6 +2177,9 @@
         mat.accent.color.setHex(c.accent);
         mat.dark.color.setHex(c.dark);
         hemi.intensity = c.hemi;
+        dmat.hull.color.setHex(c.hull);
+        dmat.arm.color.setHex(c.arm);
+        dmat.blur.opacity = c.blur;
       }
       syncTheme();
       new MutationObserver(syncTheme).observe(document.documentElement, {
